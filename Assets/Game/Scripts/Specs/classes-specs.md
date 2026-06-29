@@ -1,6 +1,6 @@
 # Especificação das classes do projeto
 
-Este documento reúne a especificação de cada classe presente no projeto para servir como referência de contexto e evolução futura.
+Este documento reúne a especificação atual das classes do projeto para servir como referência de contexto, evolução futura e padronização de implementação.
 
 ## Visão geral da arquitetura
 
@@ -18,10 +18,10 @@ O projeto segue uma arquitetura baseada em:
 - Responsabilidade: localizar todas as classes que herdam de Ability no GameObject e executá-las nos ciclos de vida do Unity.
 - Comportamento:
   - no Awake, coleta todas as habilidades via GetComponents<Ability>();
-  - chama Initialize() para cada uma;
+  - chama Initialize() para cada habilidade;
   - no Update, executa Tick();
   - no FixedUpdate, executa FixedTick();
-- Observação: atua como orquestrador do sistema de habilidades.
+- Observação: atua como orquestrador do sistema de habilidades e não deve ser alterado para adicionar novas habilidades.
 
 ### CharacterContext
 - Responsabilidade: servir como ponto central de acesso aos dados e serviços do personagem.
@@ -29,11 +29,11 @@ O projeto segue uma arquitetura baseada em:
   - Rigidbody2D do personagem;
   - CharacterMotor;
   - estado de chão via GroundDetector;
-  - entrada de movimento e eventos de jump via PlayerInputReader.
+  - entrada de movimento e eventos de pulo via PlayerInputReader.
 - Métodos principais:
   - MoveInput: leitura da direção horizontal;
-  - ConsumeJumpPressed(): consome o evento de jump pressionado;
-  - ConsumeJumpReleased(): consome o evento de jump solto;
+  - ConsumeJumpPressed(): consome o evento de pulo pressionado;
+  - ConsumeJumpReleased(): consome o evento de pulo solto;
   - IsGrounded: indica se o personagem está no chão.
 - Observação: reduz o acoplamento entre habilidades e componentes de baixo nível.
 
@@ -43,11 +43,7 @@ O projeto segue uma arquitetura baseada em:
   - definir velocidade vertical e horizontal;
   - ler velocidade vertical atual;
   - reduzir velocidade vertical para pulo variável;
-  - controlar saltos com suporte a air jumps.
-- Estado interno:
-  - maxAirJumps: quantidade máxima de saltos extras;
-  - remainingAirJumps: saltos extras ainda disponíveis;
-  - wasGrounded: rastreia o último estado de contato com o chão.
+  - receber dados básicos de contato com o chão.
 - Observação: a lógica de coyote time e buffer de jump fica em JumpAbility, não nesta classe.
 
 ### GroundDetector
@@ -68,7 +64,7 @@ O projeto segue uma arquitetura baseada em:
 
 ### CharacterState
 - Responsabilidade: ainda não implementada; serve como ponto de extensão para futura modelagem de estados do personagem.
-- Observação: atualmente está vazia e pode ser usada para representar estados como idle, running, jumping, falling, etc.
+- Observação: pode ser usada para representar estados como idle, running, jumping, falling, attack, etc.
 
 ### PlayerInputActions
 - Responsabilidade: classe gerada automaticamente pelo Unity Input System a partir do arquivo de definição de ações.
@@ -101,7 +97,7 @@ O projeto segue uma arquitetura baseada em:
   - aplica aceleração/desaceleração;
   - reduz a aceleração no ar com airControlMultiplier;
   - envia a velocidade resultante para o CharacterMotor.
-- Observação: funciona como habilidade de locomoção principal.
+- Observação: funciona como habilidade de locomoção principal e é um bom modelo para outras habilidades de movimento.
 
 ### JumpAbility
 - Responsabilidade: implementar a lógica de pulo do personagem.
@@ -114,19 +110,19 @@ O projeto segue uma arquitetura baseada em:
   - atualiza contadores de tempo no Tick();
   - tenta executar o pulo quando houver buffer e coyote time válidos;
   - aplica redução de velocidade vertical ao soltar o botão.
-- Observação: é uma habilidade independente e não depende de alteração em outras classes para funcionar.
+- Observação: é uma habilidade independente e não deve ser alterada para adicionar novas variações de pulo.
 
 ### JumpDecorator
-- Responsabilidade: classe de extensão planejada para a lógica de jump por decorator.
-- Observação: atualmente vazia e pronta para futura implementação de padrões decoradores.
+- Responsabilidade: base comum para extensões do comportamento de pulo, usando o padrão decorator.
+- Observação: é o ponto de extensão recomendado para adicionar comportamentos como double jump, pulo variável ou modificações de altura sem mexer em JumpAbility.
 
 ### DoubleJumpDecorator
-- Responsabilidade: extensão futura para adicionar double jump sem alterar o comportamento base de JumpAbility.
-- Observação: atualmente vazia.
+- Responsabilidade: extensão para adicionar double jump sem alterar o comportamento base de JumpAbility.
+- Observação: funciona por meio de um contador de saltos usados e reinicialização ao tocar o chão.
 
 ### VariableJumpDecorator
 - Responsabilidade: extensão futura para modularizar o comportamento de pulo variável.
-- Observação: atualmente vazia.
+- Observação: ainda não implementada, mas deve permanecer isolada da lógica principal do pulo.
 
 ### DashAbility
 - Responsabilidade: futura habilidade de dash.
@@ -147,3 +143,5 @@ O projeto segue uma arquitetura baseada em:
 - Novas habilidades devem ser adicionadas como novas classes, sem exigir mudanças nas habilidades já existentes.
 - O padrão esperado é que cada habilidade tenha uma responsabilidade única e isolada.
 - O CharacterContext deve permanecer como o ponto de acesso comum a dados e eventos do personagem.
+- Novas funcionalidades que alterem a lógica de uma habilidade base devem preferir decoradores ou classes complementares em vez de modificar a implementação principal.
+- O AbilityController deve continuar funcionando sem necessidade de registro manual por habilidade.
