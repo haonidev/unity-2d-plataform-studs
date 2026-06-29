@@ -2,17 +2,25 @@ using UnityEngine;
 
 public class DoubleJumpDecorator : JumpDecorator
 {
+    [SerializeField]
+    private int maxAirJumps = 1;
+
     private int jumpsUsed;
-    [SerializeField] private int maxAirJumps = 1;
+
+    private bool consumeAirJump;
 
     public override bool CanJump(bool baseCanJump)
     {
+        consumeAirJump = false;
+
         if (baseCanJump)
+        {
             return true;
+        }
 
         if (jumpsUsed < maxAirJumps)
         {
-            jumpsUsed++;
+            consumeAirJump = true;
             return true;
         }
 
@@ -21,11 +29,16 @@ public class DoubleJumpDecorator : JumpDecorator
 
     public override void OnJumpExecuted()
     {
-        // nada obrigatório aqui
+        if (consumeAirJump)
+        {
+            jumpsUsed++;
+            consumeAirJump = false;
+        }
     }
 
     public override void OnGrounded()
     {
         jumpsUsed = 0;
+        consumeAirJump = false;
     }
 }

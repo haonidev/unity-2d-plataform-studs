@@ -8,8 +8,10 @@ public class JumpAbility : Ability
     [Header("Timers")]
     [SerializeField] private float coyoteTime = 0.12f;
     [SerializeField] private float jumpBufferTime = 0.12f;
-    [SerializeField] private float lowJumpMultiplier = 2.5f;
+    
+    //[SerializeField] private float lowJumpMultiplier = 2.5f;
 
+    public CharacterContext CharacterContext => Context;
     private JumpDecorator[] decorators;
 
     private bool wasGrounded;
@@ -36,20 +38,29 @@ public class JumpAbility : Ability
 
         if (Context.ConsumeJumpReleased())
         {
-            ApplyVariableJump();
+            //ApplyVariableJump();    
+            foreach (var decorator in decorators)
+            {
+                decorator.OnJumpReleased();
+            }
+        }
+
+        foreach (var decorator in decorators)
+        {
+            decorator.Tick();
         }
     }
 
-    private void ApplyVariableJump()
-    {
-        if (Context.ConsumeJumpReleased())
-        {
-            if (Context.Motor.GetVerticalVelocity() > 0)
-            {
-                Context.Motor.ReduceVerticalVelocity(lowJumpMultiplier);
-            }
-        }
-    }
+    // private void ApplyVariableJump()
+    // {
+    //     if (Context.ConsumeJumpReleased())
+    //     {
+    //         if (Context.Motor.GetVerticalVelocity() > 0)
+    //         {
+    //             Context.Motor.ReduceVerticalVelocity(lowJumpMultiplier);
+    //         }
+    //     }
+    // }
 
     // private void UpdateCoyoteTime()
     // {
@@ -102,13 +113,18 @@ public class JumpAbility : Ability
 
         ExecuteJump();
 
-        foreach (var d in decorators)
-            d.OnJumpExecuted();
+        // foreach (var d in decorators)
+        //     d.OnJumpExecuted();
     }
 
     private void ExecuteJump()
     {
         Context.Motor.SetVerticalVelocity(jumpForce);
+
+        foreach (var decorator in decorators)
+        {
+            decorator.OnJumpExecuted();
+        }
 
         bufferCounter = 0;
         coyoteCounter = 0;

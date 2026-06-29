@@ -2,19 +2,46 @@ using UnityEngine;
 
 public abstract class JumpDecorator : MonoBehaviour
 {
-    protected JumpAbility ability;
+    protected JumpAbility Ability { get; private set; }
 
     public virtual void Initialize(JumpAbility ability)
     {
-        this.ability = ability;
+        Ability = ability;
     }
 
-    public virtual bool CanJump(bool baseCanJump)
+    /// <summary>
+    /// Permite alterar a decisão de executar um salto.
+    /// </summary>
+    public virtual bool CanJump(bool canJump)
     {
-        return baseCanJump;
+        return canJump;
     }
 
-    public virtual void OnJumpExecuted() { }
+    /// <summary>
+    /// Chamado imediatamente após um salto ser executado.
+    /// </summary>
+    public virtual void OnJumpExecuted()
+    {
+    }
 
-    public virtual void OnGrounded() { }
+    /// <summary>
+    /// Chamado quando o personagem toca o chão.
+    /// </summary>
+    public virtual void OnGrounded()
+    {
+    }
+
+    /// <summary>
+    /// Chamado todo Update enquanto a JumpAbility está ativa.
+    /// </summary>
+    public virtual void Tick()
+    {
+    }
+
+    /// <summary>
+    /// Chamado quando o botão de salto é liberado.
+    /// </summary>
+    public virtual void OnJumpReleased()
+    {
+    }
 }

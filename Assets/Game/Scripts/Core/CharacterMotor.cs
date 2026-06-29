@@ -5,10 +5,10 @@ public class CharacterMotor : MonoBehaviour
 {
     private Rigidbody2D rb;
 
-    [SerializeField] private int maxAirJumps = 1;
-    private int remainingAirJumps;
-
-    private bool wasGrounded;
+    //TODO: Remover daqui o gerenciamento de air jumps
+    // [SerializeField] private int maxAirJumps = 1;
+    // private int remainingAirJumps;
+    // private bool wasGrounded;
 
 
     [SerializeField] private GroundDetector groundDetector;
@@ -20,13 +20,16 @@ public class CharacterMotor : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        remainingAirJumps = maxAirJumps;
+
+        //TODO: Remover daqui o gerenciamento de air jumps
+        //remainingAirJumps = maxAirJumps;
     }
 
-    private void Update()
-    {
-        CheckGroundState();
-    }
+    //TODO: Remover daqui o gerenciamento de air jumps
+    // private void Update()
+    // {
+    //     CheckGroundState();
+    // }
 
     private void FixedUpdate()
     {
@@ -53,39 +56,41 @@ public class CharacterMotor : MonoBehaviour
         rb.linearVelocity = new Vector2(v.x, v.y / multiplier);
     }
 
-    private void CheckGroundState()
-    {
-        if (IsGrounded && !wasGrounded)
-        {
-            OnLanded();
-        }
 
-        wasGrounded = IsGrounded;
-    }
+    //TODO: Remover daqui o gerenciamento de air jumps
+    // private void CheckGroundState()
+    // {
+    //     if (IsGrounded && !wasGrounded)
+    //     {
+    //         OnLanded();
+    //     }
 
-    /// <summary>
-    /// Evento de aterrissagem
-    /// </summary>
-    private void OnLanded()
-    {
-        remainingAirJumps = maxAirJumps;
-    }
+    //     wasGrounded = IsGrounded;
+    // }
 
-    public bool TryJump(float jumpForce)
-    {
-        if (IsGrounded)
-        {
-            SetVerticalVelocity(jumpForce);
-            return true;
-        }
 
-        if (remainingAirJumps > 0)
-        {
-            SetVerticalVelocity(jumpForce);
-            remainingAirJumps--;
-            return true;
-        }
+    //TODO: Remover daqui o gerenciamento de air jumps
+    // private void OnLanded()
+    // {
+    //     remainingAirJumps = maxAirJumps;
+    // }
 
-        return false;
-    }
+    //TODO: Remover daqui o gerenciamento de air jumps
+    // public bool TryJump(float jumpForce)
+    // {
+    //     if (IsGrounded)
+    //     {
+    //         SetVerticalVelocity(jumpForce);
+    //         return true;
+    //     }
+
+    //     if (remainingAirJumps > 0)
+    //     {
+    //         SetVerticalVelocity(jumpForce);
+    //         remainingAirJumps--;
+    //         return true;
+    //     }
+
+    //     return false;
+    // }
 }
