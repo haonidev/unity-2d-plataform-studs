@@ -5,12 +5,6 @@ public class CharacterMotor : MonoBehaviour
 {
     private Rigidbody2D rb;
 
-    //TODO: Remover daqui o gerenciamento de air jumps
-    // [SerializeField] private int maxAirJumps = 1;
-    // private int remainingAirJumps;
-    // private bool wasGrounded;
-
-
     [SerializeField] private GroundDetector groundDetector;
     public bool IsGrounded => groundDetector.IsGrounded;
 
@@ -20,16 +14,7 @@ public class CharacterMotor : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        //TODO: Remover daqui o gerenciamento de air jumps
-        //remainingAirJumps = maxAirJumps;
     }
-
-    //TODO: Remover daqui o gerenciamento de air jumps
-    // private void Update()
-    // {
-    //     CheckGroundState();
-    // }
 
     private void FixedUpdate()
     {
@@ -56,41 +41,16 @@ public class CharacterMotor : MonoBehaviour
         rb.linearVelocity = new Vector2(v.x, v.y / multiplier);
     }
 
-
-    //TODO: Remover daqui o gerenciamento de air jumps
-    // private void CheckGroundState()
-    // {
-    //     if (IsGrounded && !wasGrounded)
-    //     {
-    //         OnLanded();
-    //     }
-
-    //     wasGrounded = IsGrounded;
-    // }
-
-
-    //TODO: Remover daqui o gerenciamento de air jumps
-    // private void OnLanded()
-    // {
-    //     remainingAirJumps = maxAirJumps;
-    // }
-
-    //TODO: Remover daqui o gerenciamento de air jumps
-    // public bool TryJump(float jumpForce)
-    // {
-    //     if (IsGrounded)
-    //     {
-    //         SetVerticalVelocity(jumpForce);
-    //         return true;
-    //     }
-
-    //     if (remainingAirJumps > 0)
-    //     {
-    //         SetVerticalVelocity(jumpForce);
-    //         remainingAirJumps--;
-    //         return true;
-    //     }
-
-    //     return false;
-    // }
+    /// <summary>
+    /// Limita a velocidade máxima de queda.
+    /// </summary>
+    public void ClampFallSpeed(float maxFallSpeed)
+    {
+        if (rb.linearVelocity.y < -maxFallSpeed)
+        {
+            rb.linearVelocity = new Vector2(
+                rb.linearVelocity.x,
+                -maxFallSpeed);
+        }
+    }
 }

@@ -17,8 +17,6 @@ public class GroundDetector : MonoBehaviour
             radius,
             groundLayer);
 
-        Debug.Log($"GroundDetector: {IsGrounded}");
-
         // 🔥 filtro de estabilidade
         if (IsGrounded != lastGrounded)
         {
