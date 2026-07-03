@@ -112,14 +112,13 @@ public class JumpAbility : Ability
         if (!canJump) return;
 
         ExecuteJump();
-
-        // foreach (var d in decorators)
-        //     d.OnJumpExecuted();
     }
 
     private void ExecuteJump()
     {
         Context.Motor.SetVerticalVelocity(jumpForce);
+
+        Context.State.TriggerJump();
 
         foreach (var decorator in decorators)
         {

@@ -4,20 +4,38 @@ using UnityEngine;
 public class CharacterMotor : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private CharacterState state;
 
     [SerializeField] private GroundDetector groundDetector;
-    public bool IsGrounded => groundDetector.IsGrounded;
-
 
     private float currentSpeed;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        state = GetComponent<CharacterState>();
+        groundDetector = GetComponent<GroundDetector>();
     }
 
     private void FixedUpdate()
     {
+        UpdateGroundState();
+
+        UpdateVerticalStates();
+    }
+
+    private void UpdateGroundState()
+    {
+        state.SetGrounded(groundDetector.IsGrounded);
+    }
+
+    private void UpdateVerticalStates()
+    {
+        float verticalVelocity = rb.linearVelocity.y;
+
+        state.SetRising(verticalVelocity > 0f);
+
+        state.SetFalling(verticalVelocity < 0f);
     }
 
     public void SetVerticalVelocity(float y)

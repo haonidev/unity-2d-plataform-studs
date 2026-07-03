@@ -15,6 +15,10 @@ public class CharacterContext : MonoBehaviour
     private PlayerInputReader input;
     private CharacterState state;
 
+    private void Initialize()
+    {
+    }
+
     private void Awake()
     {
         CacheComponents();

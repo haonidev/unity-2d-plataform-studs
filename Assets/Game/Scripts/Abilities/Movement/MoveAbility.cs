@@ -44,5 +44,15 @@ public class MoveAbility : Ability
         );
 
         Context.Motor.SetHorizontalVelocity(currentSpeed);
+        Context.State.SetRunning(Mathf.Abs(currentSpeed) > 0.01f);
+
+        if (inputX > 0f)
+        {
+            Context.State.SetFacingDirection(1);
+        }
+        else if (inputX < 0f)
+        {
+            Context.State.SetFacingDirection(-1);
+        }
     }
 }

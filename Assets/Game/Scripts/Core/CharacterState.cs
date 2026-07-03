@@ -1,26 +1,130 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Representa o estado atual do personagem.
+/// É a única fonte de verdade para qualquer sistema que precise
+/// observar o Player (Animator, Áudio, VFX, etc.).
+/// </summary>
 public class CharacterState : MonoBehaviour
 {
-    /// <summary>
-    /// Indica se o personagem está deslizando na parede.
-    /// </summary>
+    //==========================================================
+    // ESTADOS CONTÍNUOS
+    //==========================================================
+
+    public bool IsGrounded { get; private set; }
+
+    public bool IsRunning { get; private set; }
+
+    public bool IsRising { get; private set; }
+
+    public bool IsFalling { get; private set; }
+
     public bool IsWallSliding { get; private set; }
 
-    /// <summary>
-    /// Indica se o personagem está executando um dash.
-    /// </summary>
     public bool IsDashing { get; private set; }
 
     /// <summary>
-    /// Indica se o personagem está atacando.
+    /// -1 = esquerda
+    ///  0 = mantém direção atual
+    ///  1 = direita
     /// </summary>
-    public bool IsAttacking { get; private set; }
+    public int FacingDirection { get; private set; }
+
+    //==========================================================
+    // EVENTOS DE ESTADOS CONTÍNUOS
+    //==========================================================
+    public event Action<bool> RunningChanged;
+    public event Action<bool> GroundedChanged;
+    public event Action<bool> RisingChanged;
+    public event Action<bool> FallingChanged;
+    public event Action<bool> WallSlidingChanged;
+    public event Action<bool> DashingChanged;
+    public event Action<int> FacingDirectionChanged;
+
+
+
+    //==========================================================
+    // EVENTOS INSTANTÂNEOS (Triggers)
+    //==========================================================
 
     /// <summary>
-    /// Atualiza o estado de Wall Slide.
+    /// Disparado sempre que um salto normal é executado.
     /// </summary>
+    public event Action JumpTriggered;
+
+    /// <summary>
+    /// Disparado sempre que um Double Jump é executado.
+    /// </summary>
+    public event Action DoubleJumpTriggered;
+
+    /// <summary>
+    /// Disparado quando um Dash começa.
+    /// </summary>
+    public event Action DashTriggered;
+
+    /// <summary>
+    /// Disparado quando um ataque é executado.
+    /// </summary>
+    public event Action AttackTriggered;
+
+    /// <summary>
+    /// Disparado quando o personagem sofre dano.
+    /// </summary>
+    public event Action HurtTriggered;
+
+    // /// <summary>
+    // /// Disparado quando o personagem toca o chão.
+    // /// </summary>
+    // public event Action Landed;
+
+    //==========================================================
+    // SETTERS DOS ESTADOS CONTÍNUOS
+    //==========================================================
+
+    public void SetGrounded(bool value)
+    {
+        if (IsGrounded == value)
+            return;
+
+        IsGrounded = value;
+
+        GroundedChanged?.Invoke(value);
+
+        // if (value)
+        //     Landed?.Invoke();
+    }
+
+    public void SetRunning(bool value)
+    {
+        if (IsRunning == value)
+            return;
+
+        IsRunning = value;
+
+        RunningChanged?.Invoke(value);
+    }
+
+    public void SetRising(bool value)
+    {
+        if (IsRising == value)
+            return;
+
+        IsRising = value;
+
+        RisingChanged?.Invoke(value);
+    }
+
+    public void SetFalling(bool value)
+    {
+        if (IsFalling == value)
+            return;
+
+        IsFalling = value;
+
+        FallingChanged?.Invoke(value);
+    }
+
     public void SetWallSliding(bool value)
     {
         if (IsWallSliding == value)
@@ -31,9 +135,6 @@ public class CharacterState : MonoBehaviour
         WallSlidingChanged?.Invoke(value);
     }
 
-    /// <summary>
-    /// Atualiza o estado de Dash.
-    /// </summary>
     public void SetDashing(bool value)
     {
         if (IsDashing == value)
@@ -44,31 +145,42 @@ public class CharacterState : MonoBehaviour
         DashingChanged?.Invoke(value);
     }
 
-    /// <summary>
-    /// Atualiza o estado de Ataque.
-    /// </summary>
-    public void SetAttacking(bool value)
+    public void SetFacingDirection(int value)
     {
-        if (IsAttacking == value)
+        if (FacingDirection == value)
             return;
 
-        IsAttacking = value;
+        FacingDirection = value;
 
-        AttackingChanged?.Invoke(value);
+        FacingDirectionChanged?.Invoke(value);
     }
 
-    /// <summary>
-    /// Disparado quando o estado de Wall Slide muda.
-    /// </summary>
-    public event Action<bool> WallSlidingChanged;
+    //==========================================================
+    // TRIGGERS
+    //==========================================================
 
-    /// <summary>
-    /// Disparado quando o estado de Dash muda.
-    /// </summary>
-    public event Action<bool> DashingChanged;
+    public void TriggerJump()
+    {
+        JumpTriggered?.Invoke();
+    }
 
-    /// <summary>
-    /// Disparado quando o estado de Ataque muda.
-    /// </summary>
-    public event Action<bool> AttackingChanged;
+    public void TriggerDoubleJump()
+    {
+        DoubleJumpTriggered?.Invoke();
+    }
+
+    public void TriggerDash()
+    {
+        DashTriggered?.Invoke();
+    }
+
+    public void TriggerAttack()
+    {
+        AttackTriggered?.Invoke();
+    }
+
+    public void TriggerHurt()
+    {
+        HurtTriggered?.Invoke();
+    }
 }
