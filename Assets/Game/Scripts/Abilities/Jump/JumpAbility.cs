@@ -36,9 +36,8 @@ public class JumpAbility : Ability
 
         TryConsumeJump();
 
-        if (Context.ConsumeJumpReleased())
+        if (Context.JumpReleased)
         {
-            //ApplyVariableJump();    
             foreach (var decorator in decorators)
             {
                 decorator.OnJumpReleased();
@@ -50,25 +49,6 @@ public class JumpAbility : Ability
             decorator.Tick();
         }
     }
-
-    // private void ApplyVariableJump()
-    // {
-    //     if (Context.ConsumeJumpReleased())
-    //     {
-    //         if (Context.Motor.GetVerticalVelocity() > 0)
-    //         {
-    //             Context.Motor.ReduceVerticalVelocity(lowJumpMultiplier);
-    //         }
-    //     }
-    // }
-
-    // private void UpdateCoyoteTime()
-    // {
-    //     if (Context.IsGrounded)
-    //         coyoteCounter = coyoteTime;
-    //     else
-    //         coyoteCounter -= Time.deltaTime;
-    // }
 
     private void UpdateCoyoteTime()
     {
@@ -93,7 +73,7 @@ public class JumpAbility : Ability
 
     private void UpdateJumpBuffer()
     {
-        if (Context.ConsumeJumpPressed())
+        if (Context.JumpPressed)
             bufferCounter = jumpBufferTime;
         else
             bufferCounter -= Time.deltaTime;

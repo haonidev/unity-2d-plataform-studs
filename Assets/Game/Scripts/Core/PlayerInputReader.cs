@@ -5,26 +5,12 @@ public class PlayerInputReader : MonoBehaviour
 {
     private PlayerInputActions inputActions;
 
-    public Vector2 MoveInput { get; private set; }
+    private readonly PlayerFrameInput frameInput = new();
 
-
-    private bool jumpPressed;
-
-    public bool ConsumeJumpPressed()
-    {
-        bool value = jumpPressed;
-        jumpPressed = false;
-        return value;
-    }
-
-    private bool jumpReleased;
-
-    public bool ConsumeJumpReleased()
-    {
-        bool value = jumpReleased;
-        jumpReleased = false;
-        return value;
-    }
+    /// <summary>
+    /// Estado do input referente ao frame atual.
+    /// </summary>
+    public PlayerFrameInput FrameInput => frameInput;
 
     private void Awake()
     {
@@ -48,23 +34,34 @@ public class PlayerInputReader : MonoBehaviour
         inputActions.Player.Move.canceled -= OnMove;
 
         inputActions.Player.Jump.performed -= OnJump;
+        inputActions.Player.Jump.canceled -= OnJumpCanceled;
 
         inputActions.Disable();
     }
 
-
     private void OnMove(InputAction.CallbackContext context)
     {
-        MoveInput = context.ReadValue<Vector2>();
+        frameInput.Move = context.ReadValue<Vector2>();
     }
 
     private void OnJump(InputAction.CallbackContext context)
     {
-        jumpPressed = true;
+        frameInput.JumpPressed = true;
     }
 
     private void OnJumpCanceled(InputAction.CallbackContext context)
     {
-        jumpReleased = true;
+        frameInput.JumpReleased = true;
+    }
+
+    /// <summary>
+    /// Limpa todos os inputs de um único frame.
+    /// Este método deve ser chamado apenas pelo AbilityController.
+    /// </summary>
+    public void ClearFrameInputs()
+    {
+        //TODO: rever isso!
+        //JumpPressed = false;
+        //JumpReleased = false;
     }
 }

@@ -61,6 +61,7 @@
     <Compile Include="Assets/Game/Scripts/Abilities/Dash/DashAbility.cs" />
     <Compile Include="Assets/Game/Scripts/Core/CharacterMotor.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Ability.cs" />
+    <Compile Include="Assets/Game/Scripts/Input/PlayerFrameInput.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Jump/DoubleJumpDecorator.cs" />
     <Compile Include="Assets/Game/Scripts/Core/PlayerInputActions.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Jump/VariableJumpDecorator.cs" />

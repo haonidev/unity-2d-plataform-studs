@@ -1,6 +1,8 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(CharacterState))]
+[RequireComponent(typeof(GroundDetector))]
 public class CharacterMotor : MonoBehaviour
 {
     private Rigidbody2D rb;
@@ -8,7 +10,13 @@ public class CharacterMotor : MonoBehaviour
 
     [SerializeField] private GroundDetector groundDetector;
 
-    private float currentSpeed;
+    private float horizontalControlLockTimer;
+
+    // private float currentSpeed;
+    
+    
+    public bool CanControlHorizontalMovement => horizontalControlLockTimer <= 0f;
+
 
     private void Awake()
     {
@@ -22,6 +30,11 @@ public class CharacterMotor : MonoBehaviour
         UpdateGroundState();
 
         UpdateVerticalStates();
+
+        if (horizontalControlLockTimer > 0f)
+        {
+            horizontalControlLockTimer -= Time.fixedDeltaTime;
+        }
     }
 
     private void UpdateGroundState()
@@ -33,9 +46,11 @@ public class CharacterMotor : MonoBehaviour
     {
         float verticalVelocity = rb.linearVelocity.y;
 
-        state.SetRising(verticalVelocity > 0f);
+        const float threshold = 0.05f;
 
-        state.SetFalling(verticalVelocity < 0f);
+        state.SetRising(verticalVelocity > threshold);
+
+        state.SetFalling(verticalVelocity < threshold);
     }
 
     public void SetVerticalVelocity(float y)
@@ -71,4 +86,13 @@ public class CharacterMotor : MonoBehaviour
                 -maxFallSpeed);
         }
     }
+
+    /// <summary>
+    /// Bloqueia temporariamente o controle horizontal.
+    /// </summary>
+    public void LockHorizontalControl(float duration)
+    {
+        horizontalControlLockTimer = Mathf.Max(horizontalControlLockTimer, duration);
+    }
+
 }

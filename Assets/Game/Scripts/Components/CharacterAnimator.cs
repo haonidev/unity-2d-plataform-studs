@@ -111,14 +111,12 @@ public class CharacterAnimator : MonoBehaviour
     // context.State.RisingChanged -= OnRisingChanged;
     private void OnRisingChanged(bool isRising)
     {
-        Debug.Log($"IsRising = {isRising}");
         animator.SetBool("IsRising", isRising);
     }
 
     // context.State.FallingChanged -= OnFallingChanged;
     private void OnFallingChanged(bool isFalling)
     {
-        Debug.Log($"IsFalling = {isFalling}");
         animator.SetBool("IsFalling", isFalling);
     }
 

@@ -51,16 +51,35 @@ public class CharacterContext : MonoBehaviour
     // 🎮 API DE MOVIMENTO
     // -------------------------
 
-    public Vector2 MoveInput => input.MoveInput;
 
-    public bool ConsumeJumpPressed()
-    {
-        return input.ConsumeJumpPressed();
-    }
+    /// <summary>
+    /// Estado do input do frame atual.
+    /// </summary>
+    public PlayerFrameInput FrameInput => input.FrameInput;
+    
+    /// <summary>
+    /// Entrada de movimento.
+    /// </summary>
+    public Vector2 MoveInput => FrameInput.Move;
 
-    public bool ConsumeJumpReleased()
+    /// <summary>
+    /// Botão de salto pressionado neste frame.
+    /// </summary>
+    public bool JumpPressed => FrameInput.JumpPressed;
+
+    /// <summary>
+    /// Botão de salto liberado neste frame.
+    /// </summary>
+    public bool JumpReleased => FrameInput.JumpReleased;
+
+
+    /// <summary>
+    /// Limpa todos os eventos de entrada de um único frame.
+    /// Deve ser chamado apenas pelo AbilityController.
+    /// </summary>
+    public void ClearFrameInputs()
     {
-        return input.ConsumeJumpReleased();
+        input.ClearFrameInputs();
     }
 
     // -------------------------
@@ -87,8 +106,6 @@ public class CharacterContext : MonoBehaviour
     /// Indica se o personagem está caindo.
     /// </summary>
     public bool IsFalling => VerticalVelocity < 0f;
-
-    //ublic bool IsWallSliding => wallSlideAbility != null && wallSlideAbility.IsWallSliding;
 
     public CharacterState State => state;
 }

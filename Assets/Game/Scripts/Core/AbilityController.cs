@@ -6,11 +6,17 @@ public class AbilityController : MonoBehaviour
 {
     private readonly List<IAbility> abilities = new();
 
+    private CharacterContext context;
+
     private void Awake()
     {
-        var _abilities = GetComponents<Ability>();
+        context = GetComponent<CharacterContext>();
 
-        foreach (var ability in _abilities)
+        Debug.Assert(context != null);
+
+        var abilityComponents = GetComponents<Ability>();
+
+        foreach (var ability in abilityComponents)
         {
             ability.Initialize();
             abilities.Add(ability);
@@ -23,6 +29,7 @@ public class AbilityController : MonoBehaviour
         {
             ability.Tick();
         }
+        context.FrameInput.ResetFrameActions();
     }
 
     private void FixedUpdate()

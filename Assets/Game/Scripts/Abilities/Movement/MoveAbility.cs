@@ -17,6 +17,12 @@ public class MoveAbility : Ability
 
     private void ApplyMovement()
     {
+        // if (!Context.State.HasMovementControl)
+        if (!Context.Motor.CanControlHorizontalMovement)
+        {
+            return;
+        }
+
         float inputX = Context.MoveInput.x;
 
         float targetSpeed = inputX * moveSpeed;
@@ -43,8 +49,8 @@ public class MoveAbility : Ability
             accelRate * Time.fixedDeltaTime
         );
 
-        Context.Motor.SetHorizontalVelocity(currentSpeed);
         Context.State.SetRunning(Mathf.Abs(currentSpeed) > 0.01f);
+        Context.Motor.SetHorizontalVelocity(currentSpeed);
 
         if (inputX > 0f)
         {

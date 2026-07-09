@@ -131,21 +131,22 @@ GameObject:
   - component: {fileID: 336894211}
   - component: {fileID: 336894213}
   - component: {fileID: 336894214}
+  - component: {fileID: 336894226}
   - component: {fileID: 336894216}
   - component: {fileID: 336894217}
-  - component: {fileID: 336894219}
+  - component: {fileID: 336894232}
   - component: {fileID: 336894221}
+  - component: {fileID: 336894231}
+  - component: {fileID: 336894219}
   - component: {fileID: 336894222}
   - component: {fileID: 336894223}
   - component: {fileID: 336894224}
   - component: {fileID: 336894225}
   - component: {fileID: 336894227}
-  - component: {fileID: 336894226}
   - component: {fileID: 336894228}
   - component: {fileID: 336894229}
   - component: {fileID: 336894230}
-  - component: {fileID: 336894231}
-  - component: {fileID: 336894232}
+  - component: {fileID: 336894233}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -509,6 +510,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaab6d4b3c02a4290ba1f1ce6060d6b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterAnimator
+--- !u!114 &336894233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336894210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48f5ce70859694266a8c7237f28d3304, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallJumpAbility
+  jumpForce: 12
+  horizontalForce: 8
+  controlLockDuration: 0.15
+  wallDetachDistance: 0.75
 --- !u!1 &338667813
 GameObject:
   m_ObjectHideFlags: 0

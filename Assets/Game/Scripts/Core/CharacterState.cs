@@ -25,6 +25,11 @@ public class CharacterState : MonoBehaviour
     public bool IsDashing { get; private set; }
 
     /// <summary>
+    /// Indica se o jogador pode controlar o movimento horizontal.
+    /// </summary>
+    public bool HasMovementControl { get; private set; } = true;
+
+    /// <summary>
     /// -1 = esquerda
     ///  0 = mantém direção atual
     ///  1 = direita
@@ -40,6 +45,11 @@ public class CharacterState : MonoBehaviour
     public event Action<bool> FallingChanged;
     public event Action<bool> WallSlidingChanged;
     public event Action<bool> DashingChanged;
+
+    /// <summary>
+    /// Disparado quando o controle horizontal é habilitado ou desabilitado.
+    /// </summary>
+    public event Action<bool> CanMoveHorizontallyChanged;
     public event Action<int> FacingDirectionChanged;
 
 
@@ -143,6 +153,19 @@ public class CharacterState : MonoBehaviour
         IsDashing = value;
 
         DashingChanged?.Invoke(value);
+    }
+
+    /// <summary>
+    /// Habilita ou desabilita o controle horizontal do personagem.
+    /// </summary>
+    public void SetCanMoveHorizontally(bool value)
+    {
+        if (HasMovementControl == value)
+            return;
+
+        HasMovementControl = value;
+
+        CanMoveHorizontallyChanged?.Invoke(value);
     }
 
     public void SetFacingDirection(int value)

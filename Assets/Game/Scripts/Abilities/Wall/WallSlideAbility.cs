@@ -15,7 +15,7 @@ public class WallSlideAbility : Ability
 
     private void OnWallSlidingChanged(bool isSliding)
     {
-        Debug.Log($"Evento WallSlidingChanged: {isSliding}");
+        //Debug.Log($"Evento WallSlidingChanged: {isSliding}");
     }
 
     /// <summary>
@@ -44,8 +44,6 @@ public class WallSlideAbility : Ability
         {
             ApplyWallSlide();
         }
-
-        Debug.Log($"WallSliding State = {Context.State.IsWallSliding}");
     }
 
     private bool CanWallSlide()
