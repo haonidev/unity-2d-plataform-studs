@@ -74,6 +74,11 @@ public class CharacterContext : MonoBehaviour
 
 
     /// <summary>
+    /// Botão de Dash pressionado neste frame.
+    /// </summary>
+    public bool DashPressed => FrameInput.DashPressed;
+
+    /// <summary>
     /// Limpa todos os eventos de entrada de um único frame.
     /// Deve ser chamado apenas pelo AbilityController.
     /// </summary>

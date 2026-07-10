@@ -26,6 +26,7 @@ public class PlayerInputReader : MonoBehaviour
 
         inputActions.Player.Jump.performed += OnJump;
         inputActions.Player.Jump.canceled += OnJumpCanceled;
+        inputActions.Player.Dash.performed += OnDash;
     }
 
     private void OnDisable()
@@ -35,6 +36,7 @@ public class PlayerInputReader : MonoBehaviour
 
         inputActions.Player.Jump.performed -= OnJump;
         inputActions.Player.Jump.canceled -= OnJumpCanceled;
+        inputActions.Player.Dash.performed -= OnDash;
 
         inputActions.Disable();
     }
@@ -52,6 +54,12 @@ public class PlayerInputReader : MonoBehaviour
     private void OnJumpCanceled(InputAction.CallbackContext context)
     {
         frameInput.JumpReleased = true;
+    }
+
+    private void OnDash(InputAction.CallbackContext context)
+    {
+        Debug.Log("DASH INPUT");
+        frameInput.DashPressed = true;
     }
 
     /// <summary>

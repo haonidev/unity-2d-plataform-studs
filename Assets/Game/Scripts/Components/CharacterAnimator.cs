@@ -1,6 +1,5 @@
 // Responsabilidade: Observar o CharacterState e atualizar o Animator.
 
-using System.Configuration.Assemblies;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterContext))]
@@ -15,11 +14,6 @@ public class CharacterAnimator : MonoBehaviour
     private void Awake()
     {
         CacheComponents();
-    }
-
-    private void Start()
-    {
-        context.State.WallSlidingChanged += OnWallSlidingChanged;
     }
 
     private void CacheComponents()
@@ -47,7 +41,6 @@ public class CharacterAnimator : MonoBehaviour
         // Eventos instantâneos
         context.State.JumpTriggered += OnJumpTriggered;
         context.State.DoubleJumpTriggered += OnDoubleJumpTriggered;
-        context.State.DashTriggered += OnDashTriggered;
         context.State.AttackTriggered += OnAttackTriggered;
         context.State.HurtTriggered += OnHurtTriggered;
 
@@ -69,7 +62,6 @@ public class CharacterAnimator : MonoBehaviour
         // Eventos instantâneos
         context.State.JumpTriggered -= OnJumpTriggered;
         context.State.DoubleJumpTriggered -= OnDoubleJumpTriggered;
-        context.State.DashTriggered -= OnDashTriggered;
         context.State.AttackTriggered -= OnAttackTriggered;
         context.State.HurtTriggered -= OnHurtTriggered;
     }
@@ -160,13 +152,6 @@ public class CharacterAnimator : MonoBehaviour
     private void OnDoubleJumpTriggered()
     {
         animator.SetTrigger("DoubleJump");
-    }
-
-
-    // context.State.DashTriggered -= OnDashTriggered;
-    private void OnDashTriggered()
-    {
-        animator.SetTrigger("Dash");
     }
 
 

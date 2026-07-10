@@ -26,6 +26,12 @@ public class PlayerFrameInput
     /// </summary>
     public bool JumpReleased { get; set; }
 
+
+    /// <summary>
+    /// Botão de Dash pressionado neste frame.
+    /// </summary>
+    public bool DashPressed { get; set; }
+
     /// <summary>
     /// Limpa todas as ações transitórias.
     /// Não limpa entradas contínuas como Move.
@@ -34,5 +40,6 @@ public class PlayerFrameInput
     {
         JumpPressed = false;
         JumpReleased = false;
+        DashPressed = false;
     }
 }

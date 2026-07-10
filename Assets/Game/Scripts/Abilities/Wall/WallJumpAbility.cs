@@ -50,7 +50,7 @@ public class WallJumpAbility : Ability
         Context.Motor.LockHorizontalControl(controlLockDuration);
 
         // Aplica o impulso horizontal.
-        Context.Motor.SetHorizontalVelocity(horizontalForce * jumpDirection);
+        Context.Motor.RequestHorizontalVelocity(horizontalForce * jumpDirection, MotorPriority.WallJump);
 
         // Aplica o impulso vertical.
         Context.Motor.SetVerticalVelocity(jumpForce);

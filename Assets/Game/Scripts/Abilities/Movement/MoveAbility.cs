@@ -17,7 +17,6 @@ public class MoveAbility : Ability
 
     private void ApplyMovement()
     {
-        // if (!Context.State.HasMovementControl)
         if (!Context.Motor.CanControlHorizontalMovement)
         {
             return;
@@ -50,7 +49,7 @@ public class MoveAbility : Ability
         );
 
         Context.State.SetRunning(Mathf.Abs(currentSpeed) > 0.01f);
-        Context.Motor.SetHorizontalVelocity(currentSpeed);
+        Context.Motor.RequestHorizontalVelocity(currentSpeed, MotorPriority.Movement);
 
         if (inputX > 0f)
         {

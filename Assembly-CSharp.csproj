@@ -57,6 +57,7 @@
     <Compile Include="Assets/Game/Scripts/Abilities/Wall/WallJumpAbility.cs" />
     <Compile Include="Assets/Game/Scripts/Core/WallDetector.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Movement/MoveAbility.cs" />
+    <Compile Include="Assets/Game/Scripts/Core/MotorPriority.cs" />
     <Compile Include="Assets/Game/Scripts/Core/CharacterContext.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Dash/DashAbility.cs" />
     <Compile Include="Assets/Game/Scripts/Core/CharacterMotor.cs" />
@@ -65,11 +66,13 @@
     <Compile Include="Assets/Game/Scripts/Abilities/Jump/DoubleJumpDecorator.cs" />
     <Compile Include="Assets/Game/Scripts/Core/PlayerInputActions.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Jump/VariableJumpDecorator.cs" />
+    <Compile Include="Assets/Game/Scripts/Core/GhostTrailController.cs" />
     <Compile Include="Assets/Game/Scripts/Components/CharacterAnimator.cs" />
     <Compile Include="Assets/Game/Scripts/Core/PlayerInputReader.cs" />
     <Compile Include="Assets/Game/Scripts/Intefaces/IAbility.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Wall/WallSlideAbility.cs" />
     <Compile Include="Assets/Game/Scripts/Core/AbilityController.cs" />
+    <Compile Include="Assets/Game/Scripts/PlayerInputActions.cs" />
     <Compile Include="Assets/Game/Scripts/Core/CharacterState.cs" />
     <Compile Include="Assets/Game/Scripts/Core/GroundDetector.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Jump/JumpAbility.cs" />
