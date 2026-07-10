@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Orquestra o ciclo de vida das habilidades do personagem.
+/// Descobre todas as abilities no GameObject e as executa nos ciclos corretos do Unity.
+/// </summary>
 [RequireComponent(typeof(CharacterContext))]
 public class AbilityController : MonoBehaviour
 {
@@ -8,6 +12,9 @@ public class AbilityController : MonoBehaviour
 
     private CharacterContext context;
 
+    /// <summary>
+    /// Inicializa o controlador e registra todas as habilidades encontradas no mesmo GameObject.
+    /// </summary>
     private void Awake()
     {
         context = GetComponent<CharacterContext>();
@@ -23,6 +30,9 @@ public class AbilityController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Executa o Tick de cada habilidade e reseta os eventos transitórios do frame atual.
+    /// </summary>
     private void Update()
     {
         foreach (var ability in abilities)
@@ -32,6 +42,9 @@ public class AbilityController : MonoBehaviour
         context.FrameInput.ResetFrameActions();
     }
 
+    /// <summary>
+    /// Executa o FixedTick de cada habilidade no ciclo físico.
+    /// </summary>
     private void FixedUpdate()
     {
         foreach (var ability in abilities)

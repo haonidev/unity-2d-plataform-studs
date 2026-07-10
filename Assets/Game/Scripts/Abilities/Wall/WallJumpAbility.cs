@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Executa o wall jump quando o personagem está em wall slide e pressiona o botão de salto.
+/// </summary>
 public class WallJumpAbility : Ability
 {
     [Header("Wall Jump")]
@@ -16,6 +19,9 @@ public class WallJumpAbility : Ability
     [SerializeField]
     private float wallDetachDistance = 0.08f;
 
+    /// <summary>
+    /// Verifica se o wall jump pode ser executado neste frame.
+    /// </summary>
     public override void Tick()
     {
         bool canWallJump = CanWallJump();
@@ -27,15 +33,20 @@ public class WallJumpAbility : Ability
         if (!jumpPressed)
             return;
 
-
         ExecuteWallJump();
     }
 
+    /// <summary>
+    /// Verifica se o personagem está em estado de wall slide.
+    /// </summary>
     private bool CanWallJump()
     {
         return Context.State.IsWallSliding;
     }
 
+    /// <summary>
+    /// Aplica o impulso do wall jump e encerra o estado de wall slide.
+    /// </summary>
     private void ExecuteWallJump()
     {
         int jumpDirection = -Context.WallDirection;
@@ -46,22 +57,17 @@ public class WallJumpAbility : Ability
 
         transform.position = position;
 
-        // Impede que o MoveAbility assuma o controle imediatamente.
         Context.Motor.LockHorizontalControl(controlLockDuration);
 
-        // Aplica o impulso horizontal.
         Context.Motor.RequestHorizontalVelocity(horizontalForce * jumpDirection, MotorPriority.WallJump);
 
-        // Aplica o impulso vertical.
         Context.Motor.SetVerticalVelocity(jumpForce);
 
-        // Sai imediatamente do Wall Slide.
         Context.State.SetWallSliding(false);
 
         Context.State.SetRising(true);
         Context.State.SetFalling(false);
 
-        // Dispara a animação de salto.
         Context.State.TriggerJump();
     }
 }

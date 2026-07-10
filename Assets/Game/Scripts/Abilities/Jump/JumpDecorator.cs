@@ -1,9 +1,15 @@
 using UnityEngine;
 
+/// <summary>
+/// Base para extensões do comportamento de pulo sem alterar a lógica principal de JumpAbility.
+/// </summary>
 public abstract class JumpDecorator : MonoBehaviour
 {
     protected JumpAbility Ability { get; private set; }
 
+    /// <summary>
+    /// Vincula o decorator à habilidade de pulo que ele estende.
+    /// </summary>
     public virtual void Initialize(JumpAbility ability)
     {
         Ability = ability;
@@ -18,7 +24,7 @@ public abstract class JumpDecorator : MonoBehaviour
     }
 
     /// <summary>
-    /// Chamado imediatamente após um salto ser executado.
+    /// Chamado imediatamente após a execução de um salto.
     /// </summary>
     public virtual void OnJumpExecuted()
     {
@@ -32,7 +38,7 @@ public abstract class JumpDecorator : MonoBehaviour
     }
 
     /// <summary>
-    /// Chamado todo Update enquanto a JumpAbility está ativa.
+    /// Chamado a cada frame enquanto a JumpAbility estiver ativa.
     /// </summary>
     public virtual void Tick()
     {

@@ -1,11 +1,16 @@
 using UnityEngine;
 
+/// <summary>
+/// Habilita o wall slide quando o personagem está encostado em uma parede e caindo.
+/// </summary>
 public class WallSlideAbility : Ability
 {
     [SerializeField]
     private float slideSpeed = 2f;
 
-
+    /// <summary>
+    /// Registra o callback de alteração do estado de wall slide.
+    /// </summary>
     public override void Initialize()
     {
         base.Initialize();
@@ -13,13 +18,16 @@ public class WallSlideAbility : Ability
         Context.State.WallSlidingChanged += OnWallSlidingChanged;
     }
 
+    /// <summary>
+    /// Mantém o callback registrado enquanto a habilidade existir.
+    /// TODO: este método pode ser substituído por um pattern de observabilidade mais explícito no futuro.
+    /// </summary>
     private void OnWallSlidingChanged(bool isSliding)
     {
-        //Debug.Log($"Evento WallSlidingChanged: {isSliding}");
     }
 
     /// <summary>
-    /// Atalho para o estado de Wall Slide armazenado no CharacterState.
+    /// Atalho para o estado de wall slide armazenado no CharacterState.
     /// </summary>
     private bool IsWallSliding
     {
@@ -27,6 +35,9 @@ public class WallSlideAbility : Ability
         set => Context.State.SetWallSliding(value);
     }
 
+    /// <summary>
+    /// Atualiza o estado de wall slide a cada frame.
+    /// </summary>
     public override void Tick()
     {
         bool shouldSlide = CanWallSlide();
@@ -46,6 +57,9 @@ public class WallSlideAbility : Ability
         }
     }
 
+    /// <summary>
+    /// Verifica se as condições para wall slide estão presentes.
+    /// </summary>
     private bool CanWallSlide()
     {
         if (Context.IsGrounded)
@@ -63,21 +77,33 @@ public class WallSlideAbility : Ability
         return Mathf.Sign(Context.MoveInput.x) == Context.WallDirection;
     }
 
+    /// <summary>
+    /// Inicia o estado de wall slide.
+    /// </summary>
     private void BeginWallSlide()
     {
         IsWallSliding = true;
     }
 
+    /// <summary>
+    /// Finaliza o estado de wall slide.
+    /// </summary>
     private void EndWallSlide()
     {
         IsWallSliding = false;
     }
 
+    /// <summary>
+    /// Limita a velocidade de queda durante o wall slide.
+    /// </summary>
     private void ApplyWallSlide()
     {
         Context.Motor.ClampFallSpeed(slideSpeed);
     }
 
+    /// <summary>
+    /// Remove o callback de mudança de estado ao destruir a habilidade.
+    /// </summary>
     private void OnDestroy()
     {
         if (Context != null && Context.State != null)

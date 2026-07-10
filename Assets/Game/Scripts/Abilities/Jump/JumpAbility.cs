@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Implementa a lógica principal de pulo com coyote time, jump buffer e extensão via decorators.
+/// </summary>
 public class JumpAbility : Ability
 {
     [Header("Jump Settings")]
@@ -8,8 +11,6 @@ public class JumpAbility : Ability
     [Header("Timers")]
     [SerializeField] private float coyoteTime = 0.12f;
     [SerializeField] private float jumpBufferTime = 0.12f;
-    
-    //[SerializeField] private float lowJumpMultiplier = 2.5f;
 
     public CharacterContext CharacterContext => Context;
     private JumpDecorator[] decorators;
@@ -19,6 +20,9 @@ public class JumpAbility : Ability
     private float coyoteCounter;
     private float bufferCounter;
 
+    /// <summary>
+    /// Inicializa os decorators de pulo associados a esta habilidade.
+    /// </summary>
     public override void Initialize()
     {
         base.Initialize();
@@ -29,6 +33,9 @@ public class JumpAbility : Ability
             d.Initialize(this);
     }
 
+    /// <summary>
+    /// Atualiza coyote time, buffer de salto e executa a lógica de jump no Update.
+    /// </summary>
     public override void Tick()
     {
         UpdateCoyoteTime();
@@ -50,6 +57,9 @@ public class JumpAbility : Ability
         }
     }
 
+    /// <summary>
+    /// Atualiza os contadores de coyote time e notifica decorators quando o personagem pousa.
+    /// </summary>
     private void UpdateCoyoteTime()
     {
         if (Context.IsGrounded)
@@ -71,6 +81,9 @@ public class JumpAbility : Ability
         }
     }
 
+    /// <summary>
+    /// Atualiza o buffer de salto com base na entrada do frame.
+    /// </summary>
     private void UpdateJumpBuffer()
     {
         if (Context.JumpPressed)
@@ -79,7 +92,9 @@ public class JumpAbility : Ability
             bufferCounter -= Time.deltaTime;
     }
 
-
+    /// <summary>
+    /// Tenta executar o salto se houver buffer e permissões válidas.
+    /// </summary>
     private void TryConsumeJump()
     {
         if (bufferCounter <= 0) return;
@@ -94,6 +109,9 @@ public class JumpAbility : Ability
         ExecuteJump();
     }
 
+    /// <summary>
+    /// Aplica a força do salto e notifica os decorators envolvidos.
+    /// </summary>
     private void ExecuteJump()
     {
         Context.Motor.SetVerticalVelocity(jumpForce);

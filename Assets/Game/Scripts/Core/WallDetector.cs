@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Detecta contato com paredes laterais para habilitar habilidades como wall slide e wall jump.
+/// </summary>
 [RequireComponent(typeof(CharacterContext))]
 public class WallDetector : MonoBehaviour
 {
@@ -17,15 +20,19 @@ public class WallDetector : MonoBehaviour
     [SerializeField]
     private LayerMask wallLayer;
 
+    /// <summary>
+    /// Indica se o personagem está tocando uma parede.
+    /// </summary>
     public bool IsTouchingWall { get; private set; }
 
     /// <summary>
-    /// -1 = parede à esquerda
-    /// 0 = nenhuma parede
-    /// 1 = parede à direita
+    /// Direção da parede detectada: -1 para esquerda, 0 para nenhuma e 1 para direita.
     /// </summary>
     public int WallDirection { get; private set; }
 
+    /// <summary>
+    /// Atualiza o estado de contato com parede no ciclo físico.
+    /// </summary>
     private void FixedUpdate()
     {
         Collider2D leftCollider = Physics2D.OverlapCircle(
@@ -60,6 +67,9 @@ public class WallDetector : MonoBehaviour
 
 #if UNITY_EDITOR
 
+    /// <summary>
+    /// Desenha os pontos de verificação de parede no editor.
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;

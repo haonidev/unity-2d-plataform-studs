@@ -1,9 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Responsável por controlar a habilidade de Dash.
-/// Nesta primeira etapa apenas controla o estado do Dash.
-/// O movimento será implementado posteriormente.
+/// Controla a habilidade de dash do personagem, incluindo cooldown, duração e estado de execução.
 /// </summary>
 public class DashAbility : Ability
 {
@@ -25,12 +23,12 @@ public class DashAbility : Ability
     private float dashCooldown = 0.25f;
 
     /// <summary>
-    /// Tempo restante até que um novo Dash possa ser iniciado.
+    /// Tempo restante até que um novo dash possa ser iniciado.
     /// </summary>
     private float cooldownTimer;
 
     /// <summary>
-    /// Indica se o Dash aéreo ainda está disponível.
+    /// Indica se o dash aéreo ainda está disponível.
     /// </summary>
     private bool airDashAvailable = true;
 
@@ -39,13 +37,15 @@ public class DashAbility : Ability
     /// </summary>
     private bool wasGrounded;
 
+    /// <summary>
+    /// Gerencia o ciclo de vida do dash em cada frame de Update.
+    /// </summary>
     public override void Tick()
     {
         UpdateCooldown();
 
         UpdateGroundReset();
 
-        Debug.Log("Dash Tick");
         if (Context.State.IsDashing)
         {
             UpdateDash();
@@ -58,6 +58,9 @@ public class DashAbility : Ability
         StartDash();
     }
 
+    /// <summary>
+    /// Aplica a velocidade do dash e remove a gravidade durante a execução.
+    /// </summary>
     public override void FixedTick()
     {
         if (!Context.State.IsDashing)
@@ -83,6 +86,9 @@ public class DashAbility : Ability
         cooldownTimer -= Time.deltaTime;
     }
 
+    /// <summary>
+    /// Verifica se o dash pode ser iniciado com base em input, cooldown e estado atual.
+    /// </summary>
     private bool CanStartDash()
     {
         if (!Context.DashPressed)
@@ -97,13 +103,15 @@ public class DashAbility : Ability
         return airDashAvailable;
     }
 
+    /// <summary>
+    /// Inicia um novo dash e altera o estado do personagem.
+    /// </summary>
     private void StartDash()
     {
         dashTimer = dashDuration;
 
         dashDirection = Context.State.FacingDirection;
 
-        // Segurança: caso o personagem ainda não tenha uma direção válida.
         if (dashDirection == 0)
             dashDirection = 1;
 
@@ -118,6 +126,9 @@ public class DashAbility : Ability
         }
     }
 
+    /// <summary>
+    /// Atualiza a duração do dash ativo.
+    /// </summary>
     private void UpdateDash()
     {
         dashTimer -= Time.deltaTime;
@@ -128,13 +139,16 @@ public class DashAbility : Ability
         }
     }
 
+    /// <summary>
+    /// Finaliza o dash ativo.
+    /// </summary>
     private void EndDash()
     {
         Context.State.SetDashing(false);
     }
 
     /// <summary>
-    /// Restaura o Dash quando o personagem toca o chão.
+    /// Restaura o dash aéreo quando o personagem toca o chão.
     /// </summary>
     private void UpdateGroundReset()
     {

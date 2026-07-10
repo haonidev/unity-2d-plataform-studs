@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/// <summary>
+/// Encapsula a aplicação das mudanças físicas do personagem no Rigidbody2D.
+/// Centraliza velocidade, gravidade e estados derivados do movimento.
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CharacterState))]
 [RequireComponent(typeof(GroundDetector))]
@@ -21,11 +25,15 @@ public class CharacterMotor : MonoBehaviour
     private float requestedGravityScale;
 
     private MotorPriority gravityPriority;
-    
-    
+
+    /// <summary>
+    /// Indica se o personagem pode receber controle horizontal no momento.
+    /// </summary>
     public bool CanControlHorizontalMovement => horizontalControlLockTimer <= 0f;
 
-
+    /// <summary>
+    /// Cacheia referências físicas e define a gravidade padrão inicial.
+    /// </summary>
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -36,6 +44,9 @@ public class CharacterMotor : MonoBehaviour
         requestedGravityScale = defaultGravityScale;
     }
 
+    /// <summary>
+    /// Atualiza estados de chão e vertical e aplica os pedidos de movimento e gravidade no ciclo físico.
+    /// </summary>
     private void FixedUpdate()
     {
         UpdateGroundState();
@@ -52,6 +63,9 @@ public class CharacterMotor : MonoBehaviour
         ApplyRequestedGravity();
     }
 
+    /// <summary>
+    /// Aplica a velocidade horizontal solicitada ao Rigidbody.
+    /// </summary>
     private void ApplyRequestedVelocity()
     {
         rb.linearVelocity = new Vector2(requestedHorizontalVelocity, rb.linearVelocity.y);
@@ -61,6 +75,9 @@ public class CharacterMotor : MonoBehaviour
         currentPriority = MotorPriority.Movement;
     }
 
+    /// <summary>
+    /// Aplica a gravidade solicitada ao Rigidbody.
+    /// </summary>
     private void ApplyRequestedGravity()
     {
         rb.gravityScale = requestedGravityScale;
@@ -70,11 +87,17 @@ public class CharacterMotor : MonoBehaviour
         gravityPriority = MotorPriority.Movement;
     }
 
+    /// <summary>
+    /// Sincroniza o estado de grounded com o GroundDetector.
+    /// </summary>
     private void UpdateGroundState()
     {
         state.SetGrounded(groundDetector.IsGrounded);
     }
 
+    /// <summary>
+    /// Atualiza os estados de subida e queda com base na velocidade vertical atual.
+    /// </summary>
     private void UpdateVerticalStates()
     {
         float verticalVelocity = rb.linearVelocity.y;
@@ -86,24 +109,32 @@ public class CharacterMotor : MonoBehaviour
         state.SetFalling(verticalVelocity < threshold);
     }
 
+    /// <summary>
+    /// Define a velocidade vertical do personagem.
+    /// </summary>
     public void SetVerticalVelocity(float y)
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, y);
     }
 
+    /// <summary>
+    /// Define a velocidade horizontal do personagem.
+    /// </summary>
     public void SetHorizontalVelocity(float x)
     {
         rb.linearVelocity = new Vector2(x, rb.linearVelocity.y);
     }
 
+    /// <summary>
+    /// Retorna a velocidade vertical atual do personagem.
+    /// </summary>
     public float GetVerticalVelocity()
     {
         return rb.linearVelocity.y;
     }
 
     /// <summary>
-    /// Solicita uma velocidade horizontal.
-    /// A velocidade será aplicada no próximo FixedUpdate.
+    /// Solicita uma velocidade horizontal para ser aplicada no próximo FixedUpdate.
     /// </summary>
     public void RequestHorizontalVelocity(float velocity, MotorPriority priority)
     {
@@ -115,6 +146,9 @@ public class CharacterMotor : MonoBehaviour
         currentPriority = priority;
     }
 
+    /// <summary>
+    /// Reduz a velocidade vertical atual por um multiplicador.
+    /// </summary>
     public void ReduceVerticalVelocity(float multiplier)
     {
         var v = rb.linearVelocity;
@@ -122,8 +156,7 @@ public class CharacterMotor : MonoBehaviour
     }
 
     /// <summary>
-    /// Solicita uma gravidade para este frame.
-    /// Apenas a maior prioridade será aplicada.
+    /// Solicita uma gravidade específica para ser aplicada com a prioridade informada.
     /// </summary>
     public void RequestGravityScale(
         float gravityScale,
@@ -138,7 +171,7 @@ public class CharacterMotor : MonoBehaviour
     }
 
     /// <summary>
-    /// Limita a velocidade máxima de queda.
+    /// Limita a velocidade máxima de queda do personagem.
     /// </summary>
     public void ClampFallSpeed(float maxFallSpeed)
     {
@@ -151,11 +184,10 @@ public class CharacterMotor : MonoBehaviour
     }
 
     /// <summary>
-    /// Bloqueia temporariamente o controle horizontal.
+    /// Bloqueia temporariamente o controle horizontal do personagem por um tempo.
     /// </summary>
     public void LockHorizontalControl(float duration)
     {
         horizontalControlLockTimer = Mathf.Max(horizontalControlLockTimer, duration);
     }
-
 }

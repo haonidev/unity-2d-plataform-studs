@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/// <summary>
+/// Centraliza o acesso aos componentes e aos dados do personagem para as habilidades e sistemas de gameplay.
+/// Serve como ponto único de leitura de estado e entrada.
+/// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(CharacterMotor))]
 [RequireComponent(typeof(CharacterState))]
@@ -15,16 +19,26 @@ public class CharacterContext : MonoBehaviour
     private PlayerInputReader input;
     private CharacterState state;
 
+    /// <summary>
+    /// Inicializa a referência interna do contexto.
+    /// TODO: este método pode ser removido futuramente se a inicialização for totalmente feita em Awake.
+    /// </summary>
     private void Initialize()
     {
     }
 
+    /// <summary>
+    /// Cacheia os componentes principais necessários para o contexto do personagem.
+    /// </summary>
     private void Awake()
     {
         CacheComponents();
         ValidateComponents();
     }
 
+    /// <summary>
+    /// Busca os componentes essenciais no mesmo GameObject.
+    /// </summary>
     private void CacheComponents()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
@@ -36,6 +50,9 @@ public class CharacterContext : MonoBehaviour
         state = GetComponent<CharacterState>();
     }
 
+    /// <summary>
+    /// Garante que os componentes obrigatórios existam antes de usar o contexto.
+    /// </summary>
     private void ValidateComponents()
     {
         Debug.Assert(Rigidbody != null);
@@ -51,12 +68,11 @@ public class CharacterContext : MonoBehaviour
     // 🎮 API DE MOVIMENTO
     // -------------------------
 
-
     /// <summary>
     /// Estado do input do frame atual.
     /// </summary>
     public PlayerFrameInput FrameInput => input.FrameInput;
-    
+
     /// <summary>
     /// Entrada de movimento.
     /// </summary>
@@ -72,14 +88,13 @@ public class CharacterContext : MonoBehaviour
     /// </summary>
     public bool JumpReleased => FrameInput.JumpReleased;
 
-
     /// <summary>
     /// Botão de Dash pressionado neste frame.
     /// </summary>
     public bool DashPressed => FrameInput.DashPressed;
 
     /// <summary>
-    /// Limpa todos os eventos de entrada de um único frame.
+    /// Limpa os eventos de entrada de um único frame.
     /// Deve ser chamado apenas pelo AbilityController.
     /// </summary>
     public void ClearFrameInputs()
@@ -91,14 +106,23 @@ public class CharacterContext : MonoBehaviour
     // 🌍 ESTADO DO MUNDO
     // -------------------------
 
+    /// <summary>
+    /// Indica se o personagem está tocando o chão.
+    /// </summary>
     public bool IsGrounded => groundDetector.IsGrounded;
 
+    /// <summary>
+    /// Indica se o personagem está tocando uma parede.
+    /// </summary>
     public bool IsTouchingWall => wallDetector.IsTouchingWall;
 
+    /// <summary>
+    /// Direção da parede detectada, se houver.
+    /// </summary>
     public int WallDirection => wallDetector.WallDirection;
 
     /// <summary>
-    /// Velocidade vertical atual.
+    /// Velocidade vertical atual do personagem.
     /// </summary>
     public float VerticalVelocity => Motor.GetVerticalVelocity();
 
@@ -112,5 +136,8 @@ public class CharacterContext : MonoBehaviour
     /// </summary>
     public bool IsFalling => VerticalVelocity < 0f;
 
+    /// <summary>
+    /// Acesso ao estado de gameplay do personagem.
+    /// </summary>
     public CharacterState State => state;
 }

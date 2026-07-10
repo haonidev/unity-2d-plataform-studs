@@ -2,9 +2,8 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Representa o estado atual do personagem.
-/// É a única fonte de verdade para qualquer sistema que precise
-/// observar o Player (Animator, Áudio, VFX, etc.).
+/// Representa o estado atual do personagem e dispara eventos de mudança para animação, áudio e outras sistemas.
+/// É a fonte única de verdade para o estado de gameplay.
 /// </summary>
 public class CharacterState : MonoBehaviour
 {
@@ -52,8 +51,6 @@ public class CharacterState : MonoBehaviour
     public event Action<bool> CanMoveHorizontallyChanged;
     public event Action<int> FacingDirectionChanged;
 
-
-
     //==========================================================
     // EVENTOS INSTANTÂNEOS (Triggers)
     //==========================================================
@@ -83,15 +80,13 @@ public class CharacterState : MonoBehaviour
     /// </summary>
     public event Action HurtTriggered;
 
-    // /// <summary>
-    // /// Disparado quando o personagem toca o chão.
-    // /// </summary>
-    // public event Action Landed;
-
     //==========================================================
     // SETTERS DOS ESTADOS CONTÍNUOS
     //==========================================================
 
+    /// <summary>
+    /// Atualiza o estado de grounded e dispara o evento correspondente quando houver mudança.
+    /// </summary>
     public void SetGrounded(bool value)
     {
         if (IsGrounded == value)
@@ -100,11 +95,11 @@ public class CharacterState : MonoBehaviour
         IsGrounded = value;
 
         GroundedChanged?.Invoke(value);
-
-        // if (value)
-        //     Landed?.Invoke();
     }
 
+    /// <summary>
+    /// Atualiza o estado de corrida e dispara o evento correspondente quando houver mudança.
+    /// </summary>
     public void SetRunning(bool value)
     {
         if (IsRunning == value)
@@ -115,6 +110,9 @@ public class CharacterState : MonoBehaviour
         RunningChanged?.Invoke(value);
     }
 
+    /// <summary>
+    /// Atualiza o estado de subida e dispara o evento correspondente quando houver mudança.
+    /// </summary>
     public void SetRising(bool value)
     {
         if (IsRising == value)
@@ -125,6 +123,9 @@ public class CharacterState : MonoBehaviour
         RisingChanged?.Invoke(value);
     }
 
+    /// <summary>
+    /// Atualiza o estado de queda e dispara o evento correspondente quando houver mudança.
+    /// </summary>
     public void SetFalling(bool value)
     {
         if (IsFalling == value)
@@ -135,6 +136,9 @@ public class CharacterState : MonoBehaviour
         FallingChanged?.Invoke(value);
     }
 
+    /// <summary>
+    /// Atualiza o estado de wall slide e dispara o evento correspondente quando houver mudança.
+    /// </summary>
     public void SetWallSliding(bool value)
     {
         if (IsWallSliding == value)
@@ -145,6 +149,9 @@ public class CharacterState : MonoBehaviour
         WallSlidingChanged?.Invoke(value);
     }
 
+    /// <summary>
+    /// Atualiza o estado de dashing e dispara o evento correspondente quando houver mudança.
+    /// </summary>
     public void SetDashing(bool value)
     {
         if (IsDashing == value)
@@ -168,6 +175,9 @@ public class CharacterState : MonoBehaviour
         CanMoveHorizontallyChanged?.Invoke(value);
     }
 
+    /// <summary>
+    /// Atualiza a direção visual do personagem.
+    /// </summary>
     public void SetFacingDirection(int value)
     {
         if (FacingDirection == value)
@@ -182,26 +192,41 @@ public class CharacterState : MonoBehaviour
     // TRIGGERS
     //==========================================================
 
+    /// <summary>
+    /// Dispara o evento de salto executado.
+    /// </summary>
     public void TriggerJump()
     {
         JumpTriggered?.Invoke();
     }
 
+    /// <summary>
+    /// Dispara o evento de double jump executado.
+    /// </summary>
     public void TriggerDoubleJump()
     {
         DoubleJumpTriggered?.Invoke();
     }
 
+    /// <summary>
+    /// Dispara o evento de dash iniciado.
+    /// </summary>
     public void TriggerDash()
     {
         DashTriggered?.Invoke();
     }
 
+    /// <summary>
+    /// Dispara o evento de ataque executado.
+    /// </summary>
     public void TriggerAttack()
     {
         AttackTriggered?.Invoke();
     }
 
+    /// <summary>
+    /// Dispara o evento de dano sofrido.
+    /// </summary>
     public void TriggerHurt()
     {
         HurtTriggered?.Invoke();

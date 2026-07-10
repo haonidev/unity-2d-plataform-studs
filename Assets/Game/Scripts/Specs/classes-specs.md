@@ -8,7 +8,8 @@ O projeto segue uma arquitetura baseada em:
 - um contexto central do personagem, responsável por expor dados e eventos importantes;
 - um controlador de habilidades, que inicializa e executa todas as habilidades encontradas;
 - habilidades específicas, cada uma com responsabilidade única;
-- uma regra de extensão: novas habilidades devem ser adicionadas sem exigir alterações em habilidades existentes.
+- um estado centralizado do personagem para animação, áudio e feedback;
+- uma regra de extensão: novas habilidades e sistemas devem ser adicionados sem exigir alterações em módulos já existentes.
 
 ---
 
@@ -28,13 +29,20 @@ O projeto segue uma arquitetura baseada em:
 - Dados expostos:
   - Rigidbody2D do personagem;
   - CharacterMotor;
-  - estado de chão via GroundDetector;
-  - entrada de movimento e eventos de pulo via PlayerInputReader.
+  - GroundDetector;
+  - WallDetector;
+  - PlayerInputReader;
+  - CharacterState;
+  - entrada de movimento e eventos de pulo via PlayerFrameInput.
 - Métodos principais:
+  - FrameInput: leitura do estado do frame atual;
   - MoveInput: leitura da direção horizontal;
-  - ConsumeJumpPressed(): consome o evento de pulo pressionado;
-  - ConsumeJumpReleased(): consome o evento de pulo solto;
-  - IsGrounded: indica se o personagem está no chão.
+  - JumpPressed: indica pulo pressionado;
+  - JumpReleased: indica pulo liberado;
+  - DashPressed: indica dash pressionado;
+  - IsGrounded: indica se o personagem está no chão;
+  - IsTouchingWall: indica contato com parede;
+  - WallDirection: direção da parede detectada.
 - Observação: reduz o acoplamento entre habilidades e componentes de baixo nível.
 
 ### CharacterMotor
@@ -43,7 +51,8 @@ O projeto segue uma arquitetura baseada em:
   - definir velocidade vertical e horizontal;
   - ler velocidade vertical atual;
   - reduzir velocidade vertical para pulo variável;
-  - receber dados básicos de contato com o chão.
+  - aplicar prioridades de movimento e gravidade;
+  - bloquear temporariamente o controle horizontal.
 - Observação: a lógica de coyote time e buffer de jump fica em JumpAbility, não nesta classe.
 
 ### GroundDetector
@@ -54,20 +63,32 @@ O projeto segue uma arquitetura baseada em:
   - mantém um controle simples de estabilidade do estado de grounded.
 - Observação: é um componente auxiliar para o contexto e para outras habilidades.
 
+### WallDetector
+- Responsabilidade: identificar contato com paredes laterais.
+- Implementação:
+  - usa overlap circle em pontos de verificação à esquerda e à direita;
+  - produz um valor de direção para habilitar wall slide e wall jump;
+  - expõe o estado de contato pelo CharacterContext.
+
 ### PlayerInputReader
-- Responsabilidade: capturar inputs do jogador via Unity Input System e expor eventos de forma simples para o restante do projeto.
+- Responsabilidade: capturar inputs do jogador via Unity Input System e expor eventos simples para o restante do projeto.
 - Funcionalidades:
   - lê o movimento do joystick ou teclado;
   - registra se o botão de pulo foi pressionado ou solto;
-  - disponibiliza métodos para consumir esses eventos.
+  - registra se o botão de dash foi pressionado;
+  - disponibiliza os valores via PlayerFrameInput.
 - Observação: centraliza a leitura de input para evitar espalhar dependências do Input System pelo projeto.
 
+### PlayerFrameInput
+- Responsabilidade: representar as entradas do jogador durante um único frame.
+- Observação: entradas transitórias como JumpPressed, JumpReleased e DashPressed são limpas ao fim do ciclo de Update.
+
 ### CharacterState
-- Responsabilidade: ainda não implementada; serve como ponto de extensão para futura modelagem de estados do personagem.
-- Observação: pode ser usada para representar estados como idle, running, jumping, falling, attack, etc.
+- Responsabilidade: armazenar o estado atual do personagem e publicar eventos usados por animação, áudio e VFX.
+- Observação: pode ser usada para representar estados como idle, running, jumping, falling, attack, dash, wall slide, etc.
 
 ### PlayerInputActions
-- Responsabilidade: classe gerada automaticamente pelo Unity Input System a partir do arquivo de definição de ações.
+- Responsabilidade: classe gerada automaticamente pelo Unity Input System a partir do asset de input.
 - Observação: não deve ser editada manualmente; alterações devem ser feitas no asset de input e regeneradas.
 
 ---
@@ -105,11 +126,11 @@ O projeto segue uma arquitetura baseada em:
   - pulo comum;
   - coyote time;
   - jump buffer;
-  - pulo variável ao soltar o botão.
+  - integração com decorators para variações de pulo.
 - Comportamento:
   - atualiza contadores de tempo no Tick();
   - tenta executar o pulo quando houver buffer e coyote time válidos;
-  - aplica redução de velocidade vertical ao soltar o botão.
+  - notifica decorators antes e depois da execução do salto.
 - Observação: é uma habilidade independente e não deve ser alterada para adicionar novas variações de pulo.
 
 ### JumpDecorator
@@ -121,20 +142,20 @@ O projeto segue uma arquitetura baseada em:
 - Observação: funciona por meio de um contador de saltos usados e reinicialização ao tocar o chão.
 
 ### VariableJumpDecorator
-- Responsabilidade: extensão futura para modularizar o comportamento de pulo variável.
-- Observação: ainda não implementada, mas deve permanecer isolada da lógica principal do pulo.
+- Responsabilidade: modularizar o comportamento de pulo variável.
+- Observação: permanece isolada da lógica principal do pulo.
 
 ### DashAbility
-- Responsabilidade: futura habilidade de dash.
-- Observação: arquivo criado como espaço para implementação futura.
+- Responsabilidade: controlar o dash do personagem com duração, cooldown e estado de execução.
+- Observação: o movimento do dash é aplicado pelo CharacterMotor com prioridade específica.
 
 ### WallSlideAbility
-- Responsabilidade: futura habilidade de wall slide.
-- Observação: arquivo criado como espaço para implementação futura.
+- Responsabilidade: habilitar o wall slide quando o personagem está encostado em uma parede e caindo.
+- Observação: altera o estado de wall slide e limita a velocidade de queda.
 
 ### WallJumpAbility
-- Responsabilidade: futura habilidade de wall jump.
-- Observação: arquivo criado como espaço para implementação futura.
+- Responsabilidade: executar o wall jump quando o personagem está em wall slide e pressiona o botão de salto.
+- Observação: aplica impulso horizontal e vertical e encerra o estado de wall slide.
 
 ---
 
@@ -145,3 +166,4 @@ O projeto segue uma arquitetura baseada em:
 - O CharacterContext deve permanecer como o ponto de acesso comum a dados e eventos do personagem.
 - Novas funcionalidades que alterem a lógica de uma habilidade base devem preferir decoradores ou classes complementares em vez de modificar a implementação principal.
 - O AbilityController deve continuar funcionando sem necessidade de registro manual por habilidade.
+- Sistemas como itens, inimigos e traps devem seguir este mesmo princípio: um componente por responsabilidade, com comunicação por eventos ou estado compartilhado.

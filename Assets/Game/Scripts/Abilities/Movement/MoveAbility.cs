@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Aplica o movimento horizontal do personagem com aceleração, desaceleração e controle no ar.
+/// </summary>
 public class MoveAbility : Ability
 {
     [Header("Movement Settings")]
@@ -10,11 +13,17 @@ public class MoveAbility : Ability
 
     private float currentSpeed;
 
+    /// <summary>
+    /// Executa a lógica de movimentação no ciclo físico.
+    /// </summary>
     public override void FixedTick()
     {
         ApplyMovement();
     }
 
+    /// <summary>
+    /// Calcula e aplica a velocidade horizontal com base na entrada do jogador.
+    /// </summary>
     private void ApplyMovement()
     {
         if (!Context.Motor.CanControlHorizontalMovement)
