@@ -112,9 +112,6 @@ public class DashAbility : Ability
 
         dashDirection = Context.State.FacingDirection;
 
-        if (dashDirection == 0)
-            dashDirection = 1;
-
         Context.State.SetDashing(true);
         Context.Motor.LockHorizontalControl(dashDuration);
 

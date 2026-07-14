@@ -66,11 +66,14 @@
     <Compile Include="Assets/Game/Scripts/Abilities/Jump/DoubleJumpDecorator.cs" />
     <Compile Include="Assets/Game/Scripts/Core/PlayerInputActions.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Jump/VariableJumpDecorator.cs" />
-    <Compile Include="Assets/Game/Scripts/Core/GhostTrailController.cs" />
+    <Compile Include="Assets/Game/Scripts/Components/GhostTrail/DashGhostTrail.cs.cs" />
     <Compile Include="Assets/Game/Scripts/Components/CharacterAnimator.cs" />
+    <Compile Include="Assets/Game/Scripts/Components/GhostTrail/GhostInstance.cs" />
     <Compile Include="Assets/Game/Scripts/Core/PlayerInputReader.cs" />
     <Compile Include="Assets/Game/Scripts/Intefaces/IAbility.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Wall/WallSlideAbility.cs" />
+    <Compile Include="Assets/Game/Scripts/Components/GhostTrail/GhostSnapshot.cs" />
+    <Compile Include="Assets/Game/Scripts/Components/GhostTrail/GhostPool.cs" />
     <Compile Include="Assets/Game/Scripts/Core/AbilityController.cs" />
     <Compile Include="Assets/Game/Scripts/PlayerInputActions.cs" />
     <Compile Include="Assets/Game/Scripts/Core/CharacterState.cs" />

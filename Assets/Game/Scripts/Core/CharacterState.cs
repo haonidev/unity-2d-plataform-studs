@@ -66,11 +66,6 @@ public class CharacterState : MonoBehaviour
     public event Action DoubleJumpTriggered;
 
     /// <summary>
-    /// Disparado quando um Dash começa.
-    /// </summary>
-    public event Action DashTriggered;
-
-    /// <summary>
     /// Disparado quando um ataque é executado.
     /// </summary>
     public event Action AttackTriggered;
@@ -180,6 +175,9 @@ public class CharacterState : MonoBehaviour
     /// </summary>
     public void SetFacingDirection(int value)
     {
+        if (value == 0)
+            return;
+
         if (FacingDirection == value)
             return;
 
@@ -206,14 +204,6 @@ public class CharacterState : MonoBehaviour
     public void TriggerDoubleJump()
     {
         DoubleJumpTriggered?.Invoke();
-    }
-
-    /// <summary>
-    /// Dispara o evento de dash iniciado.
-    /// </summary>
-    public void TriggerDash()
-    {
-        DashTriggered?.Invoke();
     }
 
     /// <summary>
