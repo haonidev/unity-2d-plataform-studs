@@ -62,6 +62,9 @@ public class WallSlideAbility : Ability
     /// </summary>
     private bool CanWallSlide()
     {
+        if (!Context.State.HasControl)
+            return false;
+
         if (Context.IsGrounded)
             return false;
 

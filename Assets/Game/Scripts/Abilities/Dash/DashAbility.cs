@@ -91,6 +91,9 @@ public class DashAbility : Ability
     /// </summary>
     private bool CanStartDash()
     {
+        if (!Context.State.HasControl)
+            return false;
+
         if (!Context.DashPressed)
             return false;
 

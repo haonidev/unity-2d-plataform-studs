@@ -97,6 +97,9 @@ public class JumpAbility : Ability
     /// </summary>
     private void TryConsumeJump()
     {
+        if (!Context.State.HasControl)
+            return;
+
         if (bufferCounter <= 0) return;
 
         bool canJump = coyoteCounter > 0;

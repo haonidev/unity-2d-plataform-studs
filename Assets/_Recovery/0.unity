@@ -196,6 +196,9 @@ GameObject:
   - component: {fileID: 336894233}
   - component: {fileID: 336894235}
   - component: {fileID: 336894236}
+  - component: {fileID: 336894237}
+  - component: {fileID: 336894239}
+  - component: {fileID: 336894238}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -370,7 +373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 394dc9abd7fb344adb8113a4b72fb066, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterMotor
-  groundDetector: {fileID: 0}
+  groundDetector: {fileID: 336894219}
 --- !u!114 &336894219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -645,6 +648,47 @@ MonoBehaviour:
   pool: {fileID: 110686639}
   interval: 0.03
   fadeDuration: 0.2
+--- !u!111 &336894237
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336894210}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
+--- !u!114 &336894238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336894210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de54c81744ba84a2ab1207952f5b77b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Debugging.DeathDebug
+  deathAbility: {fileID: 336894239}
+--- !u!114 &336894239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336894210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ab6b9f8f0c54a5a81b789b3654e584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeathAbility
 --- !u!1 &338667813
 GameObject:
   m_ObjectHideFlags: 0

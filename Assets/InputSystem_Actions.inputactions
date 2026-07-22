@@ -991,6 +991,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Debug",
+            "id": "45f40f8d-d784-4600-879f-c4e9bb377530",
+            "actions": [
+                {
+                    "name": "Kill",
+                    "type": "Button",
+                    "id": "f27a30e1-69ce-4e84-82df-f3f95d1778e0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0e48ea7c-fb3c-4129-8cb7-5ae5e5a7d08c",
+                    "path": "<Keyboard>/#(K)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Kill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

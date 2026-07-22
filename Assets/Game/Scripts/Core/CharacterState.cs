@@ -35,6 +35,12 @@ public class CharacterState : MonoBehaviour
     /// </summary>
     public int FacingDirection { get; private set; }
 
+
+    /// <summary>
+    /// Indica se o personagem pode iniciar ações controladas pelo jogador.
+    /// </summary>
+    public bool HasControl { get; private set; } = true;
+
     //==========================================================
     // EVENTOS DE ESTADOS CONTÍNUOS
     //==========================================================
@@ -74,6 +80,23 @@ public class CharacterState : MonoBehaviour
     /// Disparado quando o personagem sofre dano.
     /// </summary>
     public event Action HurtTriggered;
+
+    /// <summary>
+    /// Disparado quando o personagem morre.
+    /// </summary>
+    public event Action DeathTriggered;
+
+    /// <summary>
+    /// Disparado quando termina a execução da animação de morte.
+    /// </summary>
+    public event Action DeathAnimationFinished;
+
+    public event Action DeathCompleted;
+
+    /// <summary>
+    /// Notifica quando o estado de controle do personagem é alterado.
+    /// </summary>
+    public event Action<bool> HasControlChanged;
 
     //==========================================================
     // SETTERS DOS ESTADOS CONTÍNUOS
@@ -186,6 +209,20 @@ public class CharacterState : MonoBehaviour
         FacingDirectionChanged?.Invoke(value);
     }
 
+    /// <summary>
+    /// Define se o personagem pode receber controle do jogador.
+    /// </summary>
+    public void SetHasControl(bool value)
+    {
+        if (HasControl == value)
+            return;
+
+        HasControl = value;
+
+        HasControlChanged?.Invoke(value);
+    }
+
+
     //==========================================================
     // TRIGGERS
     //==========================================================
@@ -221,4 +258,26 @@ public class CharacterState : MonoBehaviour
     {
         HurtTriggered?.Invoke();
     }
+
+    /// <summary>
+    /// Solicita o início da sequência visual de morte.
+    /// </summary>
+    public void TriggerDeath()
+    {
+        DeathTriggered?.Invoke();
+    }
+
+    /// <summary>
+    /// Notifica que a sequência visual de morte terminou.
+    /// </summary>
+    public void FinishDeathAnimation()
+    {
+        DeathAnimationFinished?.Invoke();
+    }
+
+    public void CompleteDeath()
+    {
+        DeathCompleted?.Invoke();
+    }
+
 }

@@ -20,33 +20,41 @@ Assets/Game/Scripts/
 ├── Abilities/
 │   ├── Ability.cs
 │   ├── Jump/
+│   │   ├── DoubleJumpDecorator.cs
 │   │   ├── JumpAbility.cs
 │   │   ├── JumpDecorator.cs
-│   │   ├── DoubleJumpDecorator.cs
 │   │   └── VariableJumpDecorator.cs
 │   ├── Movement/
 │   │   └── MoveAbility.cs
 │   ├── Dash/
 │   │   └── DashAbility.cs
 │   └── Wall/
-│       ├── WallSlideAbility.cs
-│       └── WallJumpAbility.cs
+│       ├── WallJumpAbility.cs
+│       └── WallSlideAbility.cs
 ├── Core/
 │   ├── AbilityController.cs
 │   ├── CharacterContext.cs
 │   ├── CharacterMotor.cs
 │   ├── CharacterState.cs
 │   ├── GroundDetector.cs
+│   ├── MotorPriority.cs [Atualizar]
 │   ├── PlayerInputActions.cs
 │   ├── PlayerInputReader.cs
-│   ├── WallDetector.cs
-│   └── MotorPriority.cs
+│   └── WallDetector.cs
 ├── Components/
+│   ├── GhostTrail/
+│   │   ├── DashGhostTrail.cs [Atualizar]
+│   │   ├── GhostInstance.cs [Atualizar]
+│   │   ├── GhostPool.cs [Atualizar]
+│   │   └── GhostSnapshot.cs [Atualizar]
+│   └── CharacterAnimator.cs [Atualizar]
 ├── Data/
+├── Input/
+│   └── PlayerFrameInput.cs
 ├── Intefaces/
 │   └── IAbility.cs
 └── Specs/
-    ├── achitecture.md
+    ├── architecture.md
     └── classes-specs.md
 ```
 
@@ -70,6 +78,7 @@ Assets/Game/Scripts/
 - WallDetector: verifica contato com paredes para habilidades de interação lateral.
 - PlayerInputReader: traduz inputs do Input System para eventos simples consumíveis.
 - CharacterState: concentra os estados contínuos e eventos do personagem.
+- MotorPriority: define prioridades de movimentação para o CharacterMotor e auxilia a resolução de solicitações concorrentes.
 
 ### Abilities
 - Ability: classe base para o ciclo de vida das habilidades.

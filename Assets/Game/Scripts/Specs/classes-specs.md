@@ -84,8 +84,7 @@ O projeto segue uma arquitetura baseada em:
 - Observação: entradas transitórias como JumpPressed, JumpReleased e DashPressed são limpas ao fim do ciclo de Update.
 
 ### CharacterState
-- Responsabilidade: armazenar o estado atual do personagem e publicar eventos usados por animação, áudio e VFX.
-- Observação: pode ser usada para representar estados como idle, running, jumping, falling, attack, dash, wall slide, etc.
+- Responsabilidade: armazenar o estado atual do personagem e publicar eventos usados por animação, áudio e VFX.- MotorPriority: define prioridades de movimentação e ajuda a resolver solicitações concorrentes dentro do CharacterMotor.- Observação: pode ser usada para representar estados como idle, running, jumping, falling, attack, dash, wall slide, etc.
 
 ### PlayerInputActions
 - Responsabilidade: classe gerada automaticamente pelo Unity Input System a partir do asset de input.

@@ -26,6 +26,10 @@ public class MoveAbility : Ability
     /// </summary>
     private void ApplyMovement()
     {
+        if (!Context.State.HasControl)
+            return;
+
+
         if (!Context.Motor.CanControlHorizontalMovement)
         {
             return;

@@ -49,6 +49,9 @@ public class WallJumpAbility : Ability
     /// </summary>
     private void ExecuteWallJump()
     {
+        if (!Context.State.HasControl)
+            return;
+
         int jumpDirection = -Context.WallDirection;
 
         Vector3 position = transform.position;

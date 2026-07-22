@@ -43,6 +43,7 @@ public class CharacterAnimator : MonoBehaviour
         context.State.DoubleJumpTriggered += OnDoubleJumpTriggered;
         context.State.AttackTriggered += OnAttackTriggered;
         context.State.HurtTriggered += OnHurtTriggered;
+        context.State.DeathTriggered += OnDeathTriggered;
 
         // Sincronização inicial do personagem.
         SynchronizeAnimator();
@@ -50,6 +51,9 @@ public class CharacterAnimator : MonoBehaviour
 
     private void OnDisable()
     {
+        if (context == null)
+            return;
+
         // Estados contínuos
         context.State.RunningChanged -= OnRunningChanged;
         context.State.GroundedChanged -= OnGroundedChanged;
@@ -64,6 +68,7 @@ public class CharacterAnimator : MonoBehaviour
         context.State.DoubleJumpTriggered -= OnDoubleJumpTriggered;
         context.State.AttackTriggered -= OnAttackTriggered;
         context.State.HurtTriggered -= OnHurtTriggered;
+        context.State.DeathTriggered -= OnDeathTriggered;
     }
 
     private void SynchronizeAnimator()
@@ -83,9 +88,6 @@ public class CharacterAnimator : MonoBehaviour
         OnFacingDirectionChanged(context.State.FacingDirection);
     }
 
-
-    // // Estados contínuos
-    // context.State.RunningChanged -= OnRunningChanged;
     /// <summary>
     /// Atualiza a animação de corrida.
     /// </summary>
@@ -94,25 +96,21 @@ public class CharacterAnimator : MonoBehaviour
         animator.SetBool("IsRunning", isRunning);
     }
 
-    // context.State.GroundedChanged -= OnGroundedChanged;
     private void OnGroundedChanged(bool isGrounded)
     {
         animator.SetBool("IsGrounded", isGrounded);
     }
 
-    // context.State.RisingChanged -= OnRisingChanged;
     private void OnRisingChanged(bool isRising)
     {
         animator.SetBool("IsRising", isRising);
     }
 
-    // context.State.FallingChanged -= OnFallingChanged;
     private void OnFallingChanged(bool isFalling)
     {
         animator.SetBool("IsFalling", isFalling);
     }
 
-    // context.State.WallSlidingChanged -= OnWallSlidingChanged;
     /// <summary>
     /// Atualiza a animação de Wall Slide.
     /// </summary>
@@ -121,15 +119,12 @@ public class CharacterAnimator : MonoBehaviour
         animator.SetBool("IsWallSliding", isSliding);
     }
 
-    // context.State.DashingChanged -= OnDashingChanged;
     private void OnDashingChanged(bool isDashing)
     {
         animator.SetBool("IsDashing", isDashing);
     }
 
-    // context.State.FacingDirectionChanged -= OnFacingDirectionChanged;
     /// <summary>
-    /// Atualiza a direção visual do personagem.
     /// </summary>
     private void OnFacingDirectionChanged(int direction)
     {
@@ -141,31 +136,41 @@ public class CharacterAnimator : MonoBehaviour
 
 
     // // Eventos instantâneos
-    // context.State.JumpTriggered -= OnJumpTriggered;
     private void OnJumpTriggered()
     {
         animator.SetTrigger("Jump");
     }
 
 
-    // context.State.DoubleJumpTriggered -= OnDoubleJumpTriggered;
     private void OnDoubleJumpTriggered()
     {
         animator.SetTrigger("DoubleJump");
     }
 
 
-    // context.State.AttackTriggered -= OnAttackTriggered;
     private void OnAttackTriggered()
     {
         animator.SetTrigger("Attack");
     }
 
 
-    // context.State.HurtTriggered -= OnHurtTriggered;
     private void OnHurtTriggered()
     {
         animator.SetTrigger("Hurt");
+    }
+
+    private void OnDeathTriggered()
+    {
+        Debug.Log("CharacterAnimator recebeu DeathTriggered");
+        animator.SetTrigger("Death");
+    }
+
+    /// <summary>
+    /// Chamado pelo Animation Event ao término da animação de morte.
+    /// </summary>
+    public void OnDeathAnimationFinished()
+    {
+        context.State.FinishDeathAnimation();
     }
 
 }
