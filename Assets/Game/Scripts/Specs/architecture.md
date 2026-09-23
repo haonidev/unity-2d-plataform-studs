@@ -5,13 +5,14 @@
 
 ## Objetivo da arquitetura
 
-A arquitetura atual foi pensada para sustentar um gameplay de plataforma 2D com foco em extensibilidade. O personagem é tratado como um conjunto de módulos pequenos e reutilizáveis: entrada, estado, movimento físico, detecção de ambiente e habilidades específicas.
+A arquitetura atual foi pensada para sustentar um gameplay de plataforma 2D com foco em extensibilidade. O personagem é tratado como um conjunto de módulos pequenos e reutilizáveis: entrada, estado, movimento físico, detecção de ambiente, habilidades específicas e feedback visual/respawn.
 
 O padrão central é:
 - cada feature deve ter uma responsabilidade única;
 - o fluxo de dados passa pelo CharacterContext;
 - habilidades novas devem ser adicionadas como novas classes sem exigir mudanças nas classes já existentes;
-- componentes físicos e de detecção ficam isolados em módulos de core.
+- componentes físicos, de detecção e de feedback ficam isolados em módulos de core e components;
+- sistemas complementares, como debug, respawn e ghost trail, devem ser extensíveis e não acoplar diretamente a lógica principal.
 
 ## Estrutura atual das pastas
 
@@ -21,6 +22,8 @@ Assets/Game/Scripts/
 │   ├── Ability.cs
 │   ├── Dash/
 │   │   └── DashAbility.cs
+│   ├── Death/
+│   │   └── DeathAbility.cs
 │   ├── Jump/
 │   │   ├── DoubleJumpDecorator.cs
 │   │   ├── JumpAbility.cs
@@ -49,13 +52,15 @@ Assets/Game/Scripts/
 │   ├── PlayerInputReader.cs
 │   └── WallDetector.cs
 ├── Data/
+├── Debug/
+│   └── GameplayDebugInput.cs
 ├── Input/
 │   └── PlayerFrameInput.cs
 ├── Intefaces/
 │   └── IAbility.cs
-├── Respawn/
+├── Respaw/
 │   ├── RespawnController.cs
-│   └── RespawnPoint.cs
+│   └── RespawPoint.cs
 └── Specs/
     ├── architecture.md
     ├── classes-specs.md
@@ -71,7 +76,8 @@ Assets/Game/Scripts/
 4. Lógica física básica deve ficar em CharacterMotor, GroundDetector e WallDetector.
 5. Inputs devem ser lidos em PlayerInputReader e consumidos pelo contexto.
 6. Estado de gameplay deve ser centralizado em CharacterState.
-7. Novos sistemas, como itens, inimigos e traps, devem expor eventos e estado sem acoplar diretamente a outras classes.
+7. Sistemas de feedback visual, debug e respawn devem expor eventos e estado sem acoplar diretamente a outras classes.
+8. Novos sistemas, como itens, inimigos e traps, devem expor eventos e estado sem acoplar diretamente a outras classes.
 
 ## Responsabilidades por camada
 
@@ -92,6 +98,13 @@ Assets/Game/Scripts/
 - JumpDecorator: base para extensões do comportamento de salto.
 - DoubleJumpDecorator: adiciona salto extra sem mexer na lógica base de JumpAbility.
 - DashAbility, WallSlideAbility e WallJumpAbility: implementam interações específicas do personagem.
+- DeathAbility: encapsula a lógica de morte e integrações de feedback e respawn.
+
+### Componentes e sistemas complementares
+- CharacterAnimator: controla o estado visual e as transições de animação do personagem.
+- GhostTrail: conjunto de classes para criar trilhas visuais durante o dash, mantendo reutilização por pool e snapshots.
+- GameplayDebugInput: expõe entradas de debug para facilitar testes e validação de gameplay sem acoplar a lógica principal.
+- RespawnController e RespawPoint: coordenam a lógica de reaparecimento do personagem em pontos definidos.
 
 ## Padrão para implementar uma nova feature
 
@@ -100,7 +113,7 @@ Assets/Game/Scripts/
 - Ela não deve assumir responsabilidades de outra feature já existente.
 
 ### 2. Criar a classe do módulo
-- Criar um novo arquivo em uma pasta apropriada dentro de Abilities, Core ou Components.
+- Criar um novo arquivo em uma pasta apropriada dentro de Abilities, Core, Components ou Debug.
 - Se for uma habilidade, herdar de Ability.
 - Se for um sistema de estado, preferir um componente próprio com integração via CharacterContext.
 
@@ -116,15 +129,16 @@ Assets/Game/Scripts/
 
 ### 5. Isolar efeitos físicos e estado
 - Movimento, salto, detecção de chão e parede devem permanecer encapsulados em módulos de Core.
+- Feedback visual, partículas e trilhas devem permanecer em componentes específicos ou pools.
 - Se a feature precisar de estado próprio, ele deve ficar dentro da própria classe ou em um componente dedicado.
 
 ### 6. Considerar extensibilidade
 - Se a feature for uma variação de outra, prefira decoradores ou composição em vez de alterar a implementação principal.
-- Restrição: não alterar a lógica base de JumpAbility para adicionar Double Jump, Dash ou Wall Slide.
+- Restrição: não alterar a lógica base de JumpAbility para adicionar Double Jump, Dash, Wall Slide ou Death flow.
 
 ### 7. Validar e testar no cenário
 - Confirmar que a feature funciona com o personagem já existente.
-- Garantir que não interrompe movimentação, pulo, detecção de chão ou parede.
+- Garantir que não interrompe movimentação, pulo, detecção de chão, parede, respawn ou feedback visual.
 
 ## Passo a passo para implementar uma nova habilidade
 
@@ -243,6 +257,7 @@ classDiagram
     class DoubleJumpDecorator
     class VariableJumpDecorator
     class DashAbility
+    class DeathAbility
     class WallSlideAbility
     class WallJumpAbility
 
@@ -258,6 +273,7 @@ classDiagram
     MoveAbility --|> Ability
     JumpAbility --|> Ability
     DashAbility --|> Ability
+    DeathAbility --|> Ability
     WallSlideAbility --|> Ability
     WallJumpAbility --|> Ability
     DoubleJumpDecorator --|> JumpDecorator
@@ -266,4 +282,4 @@ classDiagram
 
 ## Resumo da regra de extensão
 
-A arquitetura foi pensada para permitir crescimento sem acoplamento excessivo. Cada nova feature deve ser adicionada como uma nova classe ou componente com responsabilidade local, acessando o restante do sistema por meio de CharacterContext, CharacterState e das APIs já existentes.
+A arquitetura foi pensada para permitir crescimento sem acoplamento excessivo. Cada nova feature deve ser adicionada como uma nova classe ou componente com responsabilidade local, acessando o restante do sistema por meio de CharacterContext, CharacterState, eventos de feedback e as APIs já existentes.

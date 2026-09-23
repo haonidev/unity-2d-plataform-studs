@@ -9,6 +9,7 @@ O projeto segue uma arquitetura baseada em:
 - um controlador de habilidades, que inicializa e executa todas as habilidades encontradas;
 - habilidades específicas, cada uma com responsabilidade única;
 - um estado centralizado do personagem para animação, áudio e feedback;
+- módulos de apoio para respawn, debug e feedback visual;
 - uma regra de extensão: novas habilidades e sistemas devem ser adicionados sem exigir alterações em módulos já existentes.
 
 ---
@@ -84,7 +85,12 @@ O projeto segue uma arquitetura baseada em:
 - Observação: entradas transitórias como JumpPressed, JumpReleased e DashPressed são limpas ao fim do ciclo de Update.
 
 ### CharacterState
-- Responsabilidade: armazenar o estado atual do personagem e publicar eventos usados por animação, áudio e VFX.- MotorPriority: define prioridades de movimentação e ajuda a resolver solicitações concorrentes dentro do CharacterMotor.- Observação: pode ser usada para representar estados como idle, running, jumping, falling, attack, dash, wall slide, etc.
+- Responsabilidade: armazenar o estado atual do personagem e publicar eventos usados por animação, áudio e VFX.
+- Observação: pode ser usada para representar estados como idle, running, jumping, falling, attack, dash, wall slide, death e respawn.
+
+### MotorPriority
+- Responsabilidade: definir prioridades de movimentação e resolver conflitos de solicitações concorrentes dentro do CharacterMotor.
+- Observação: ajuda a manter regras previsíveis para dash, pulo, wall slide e movimento base.
 
 ### PlayerInputActions
 - Responsabilidade: classe gerada automaticamente pelo Unity Input System a partir do asset de input.
@@ -148,6 +154,10 @@ O projeto segue uma arquitetura baseada em:
 - Responsabilidade: controlar o dash do personagem com duração, cooldown e estado de execução.
 - Observação: o movimento do dash é aplicado pelo CharacterMotor com prioridade específica.
 
+### DeathAbility
+- Responsabilidade: encapsular a lógica de morte do personagem, incluindo gatilhos e efeitos de finalização.
+- Observação: separa o fluxo de morte da lógica principal de movimento e salto para manter a arquitetura extensível.
+
 ### WallSlideAbility
 - Responsabilidade: habilitar o wall slide quando o personagem está encostado em uma parede e caindo.
 - Observação: altera o estado de wall slide e limita a velocidade de queda.
@@ -158,6 +168,30 @@ O projeto segue uma arquitetura baseada em:
 
 ---
 
+## Componentes e sistemas complementares
+
+### CharacterAnimator
+- Responsabilidade: coordenar animações e estados visuais do personagem com base no CharacterState.
+- Observação: mantém uma separação entre lógica de gameplay e reprodução visual.
+
+### GhostTrail
+- Responsabilidade: gerar trilhas visuais do personagem durante o dash em um sistema reutilizável por pooling.
+- Classes do conjunto:
+  - DashGhostTrail: dispara a trilha visual durante o dash;
+  - GhostInstance: representa uma instância temporária da trilha;
+  - GhostPool: reaproveita instâncias para reduzir criação de objetos;
+  - GhostSnapshot: captura o estado visual do personagem em um momento específico.
+
+### GameplayDebugInput
+- Responsabilidade: permitir testes rápidos de debug e validação de mecânicas sem acoplar lógica extra ao fluxo principal.
+- Observação: funciona como camada auxiliar de desenvolvimento.
+
+### RespawnController e RespawPoint
+- Responsabilidade: controlar a lógica de respawn do jogador e os pontos de reaparecimento do cenário.
+- Observação: isolam a reutilização do sistema de respawn sem misturar com a movimentação do personagem.
+
+---
+
 ## Regras de extensão do projeto
 
 - Novas habilidades devem ser adicionadas como novas classes, sem exigir mudanças nas habilidades já existentes.
@@ -165,4 +199,4 @@ O projeto segue uma arquitetura baseada em:
 - O CharacterContext deve permanecer como o ponto de acesso comum a dados e eventos do personagem.
 - Novas funcionalidades que alterem a lógica de uma habilidade base devem preferir decoradores ou classes complementares em vez de modificar a implementação principal.
 - O AbilityController deve continuar funcionando sem necessidade de registro manual por habilidade.
-- Sistemas como itens, inimigos e traps devem seguir este mesmo princípio: um componente por responsabilidade, com comunicação por eventos ou estado compartilhado.
+- Sistemas como itens, inimigos, traps, respawn, debug e feedback visual devem seguir este mesmo princípio: um componente por responsabilidade, com comunicação por eventos ou estado compartilhado.
