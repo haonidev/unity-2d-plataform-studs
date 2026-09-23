@@ -23,6 +23,16 @@ public class CharacterAnimator : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+    private void Update()
+    {
+        var info = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (info.IsName("Player_respawn"))
+        {
+            Debug.Log($"RESPAWN {info.normalizedTime:F2}");
+        }
+    }
+
     private void OnEnable()
     {
 
@@ -37,6 +47,8 @@ public class CharacterAnimator : MonoBehaviour
         context.State.WallSlidingChanged += OnWallSlidingChanged;
         context.State.DashingChanged += OnDashingChanged;
         context.State.FacingDirectionChanged += OnFacingDirectionChanged;
+        context.State.RespawnTriggered += OnRespawnTriggered;
+        context.State.RespawnCompleted += OnRespawnCompleted;
 
         // Eventos instantâneos
         context.State.JumpTriggered += OnJumpTriggered;
@@ -62,6 +74,8 @@ public class CharacterAnimator : MonoBehaviour
         context.State.WallSlidingChanged -= OnWallSlidingChanged;
         context.State.DashingChanged -= OnDashingChanged;
         context.State.FacingDirectionChanged -= OnFacingDirectionChanged;
+        context.State.RespawnTriggered -= OnRespawnTriggered;
+        context.State.RespawnCompleted -= OnRespawnCompleted;
 
         // Eventos instantâneos
         context.State.JumpTriggered -= OnJumpTriggered;
@@ -161,7 +175,6 @@ public class CharacterAnimator : MonoBehaviour
 
     private void OnDeathTriggered()
     {
-        Debug.Log("CharacterAnimator recebeu DeathTriggered");
         animator.SetTrigger("Death");
     }
 
@@ -171,6 +184,27 @@ public class CharacterAnimator : MonoBehaviour
     public void OnDeathAnimationFinished()
     {
         context.State.FinishDeathAnimation();
+    }
+
+    private void OnRespawnTriggered()
+    {
+        Debug.Log("RESPAWN TRIGGER");
+        animator.SetTrigger("Respawn");
+
+        //Debug.Log(animator.GetCurrentAnimatorStateInfo(0).fullPathHash);
+    }
+
+    private void OnRespawnCompleted()
+    {
+        //animator.SetTrigger("Respawn");
+
+        SynchronizeAnimator();
+    }
+
+    public void CharacterAnimator_OnRespawnAnimationFinished()
+    {
+        Debug.Log("RESPAWN EVENT");
+        context.State.FinishRespawnAnimation();
     }
 
 }

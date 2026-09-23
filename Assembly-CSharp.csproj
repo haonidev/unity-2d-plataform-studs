@@ -57,12 +57,14 @@
     <Compile Include="Assets/Game/Scripts/Abilities/Wall/WallJumpAbility.cs" />
     <Compile Include="Assets/Game/Scripts/Core/WallDetector.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Movement/MoveAbility.cs" />
+    <Compile Include="Assets/Game/Scripts/Respaw/RespawPoint.cs" />
     <Compile Include="Assets/Game/Scripts/Core/MotorPriority.cs" />
     <Compile Include="Assets/Game/Scripts/Core/CharacterContext.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Dash/DashAbility.cs" />
     <Compile Include="Assets/Game/Scripts/Core/CharacterMotor.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Ability.cs" />
     <Compile Include="Assets/Game/Scripts/Input/PlayerFrameInput.cs" />
+    <Compile Include="Assets/Game/Scripts/Respaw/RespawnController.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Jump/DoubleJumpDecorator.cs" />
     <Compile Include="Assets/Game/Scripts/Core/PlayerInputActions.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Jump/VariableJumpDecorator.cs" />

@@ -44,8 +44,6 @@ public class DeathAbility : Ability
     /// </summary>
     private void StartDeathSequence()
     {
-        Debug.Log("Death sequence started.");
-
         phase = DeathPhase.WaitingAnimation;
 
         Context.State.SetHasControl(false);
@@ -60,10 +58,14 @@ public class DeathAbility : Ability
     /// </summary>
     private void OnDeathAnimationFinished()
     {
+        Debug.Log("[DeathAbility] DeathAnimationFinished");
+
         if (phase != DeathPhase.WaitingAnimation)
             return;
 
         phase = DeathPhase.Idle;
+
+        Debug.Log("[DeathAbility] DeathComplete");
 
         Context.State.CompleteDeath();
     }

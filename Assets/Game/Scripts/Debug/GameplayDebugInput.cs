@@ -1,3 +1,8 @@
+/// <remarks>
+/// Ferramenta temporária utilizada apenas durante o desenvolvimento.
+/// Deve ser removida quando os sistemas definitivos de gameplay estiverem implementados.
+/// </remarks>
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 

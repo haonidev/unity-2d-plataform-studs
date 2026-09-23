@@ -68,6 +68,8 @@ public class CharacterMotor : MonoBehaviour
     /// </summary>
     private void ApplyRequestedVelocity()
     {
+        //Debug.Log($"APPLY requested={requestedHorizontalVelocity} rb={rb.linearVelocity}");
+
         rb.linearVelocity = new Vector2(requestedHorizontalVelocity, rb.linearVelocity.y);
 
         requestedHorizontalVelocity = rb.linearVelocity.x;
@@ -100,13 +102,20 @@ public class CharacterMotor : MonoBehaviour
     /// </summary>
     private void UpdateVerticalStates()
     {
+        if (state.IsGrounded)
+        {
+            state.SetRising(false);
+            state.SetFalling(false);
+            return;
+        }
+
         float verticalVelocity = rb.linearVelocity.y;
 
         const float threshold = 0.05f;
 
         state.SetRising(verticalVelocity > threshold);
 
-        state.SetFalling(verticalVelocity < threshold);
+        state.SetFalling(verticalVelocity < -threshold);
     }
 
     /// <summary>
@@ -138,6 +147,8 @@ public class CharacterMotor : MonoBehaviour
     /// </summary>
     public void RequestHorizontalVelocity(float velocity, MotorPriority priority)
     {
+        //Debug.Log($"REQUEST velocity={velocity} priority={priority} current={currentPriority}");
+
         if (priority < currentPriority)
             return;
 
@@ -189,5 +200,22 @@ public class CharacterMotor : MonoBehaviour
     public void LockHorizontalControl(float duration)
     {
         horizontalControlLockTimer = Mathf.Max(horizontalControlLockTimer, duration);
+    }
+
+    /// <summary>
+    /// Restaura o estado de movimento do personagem.
+    /// </summary>
+    public void ResetMotion()
+    {
+        SetHorizontalVelocity(0f);
+        SetVerticalVelocity(0f);
+
+        requestedHorizontalVelocity = 0f;
+        requestedGravityScale = defaultGravityScale;
+
+        currentPriority = MotorPriority.Movement;
+        gravityPriority = MotorPriority.Movement;
+
+        horizontalControlLockTimer = 0f;
     }
 }

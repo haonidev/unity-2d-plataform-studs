@@ -94,6 +94,21 @@ public class CharacterState : MonoBehaviour
     public event Action DeathCompleted;
 
     /// <summary>
+    /// Disparado quando o processo de respawn é iniciado.
+    /// </summary>
+    public event Action RespawnTriggered;
+
+    /// <summary>
+    /// Disparado quando termina a animação de respawn.
+    /// </summary>
+    public event Action RespawnAnimationFinished;
+
+    /// <summary>
+    /// Disparado quando o personagem terminou completamente o respawn.
+    /// </summary>
+    public event Action RespawnCompleted;
+
+    /// <summary>
     /// Notifica quando o estado de controle do personagem é alterado.
     /// </summary>
     public event Action<bool> HasControlChanged;
@@ -101,6 +116,19 @@ public class CharacterState : MonoBehaviour
     //==========================================================
     // SETTERS DOS ESTADOS CONTÍNUOS
     //==========================================================
+
+    public void ResetGameplayState()
+    {
+        SetRunning(false);
+
+        SetFalling(false);
+
+        SetRising(false);
+
+        SetWallSliding(false);
+
+        SetDashing(false);
+    }
 
     /// <summary>
     /// Atualiza o estado de grounded e dispara o evento correspondente quando houver mudança.
@@ -279,5 +307,30 @@ public class CharacterState : MonoBehaviour
     {
         DeathCompleted?.Invoke();
     }
+
+    /// <summary>
+    /// Solicita o início da sequência visual de respawn.
+    /// </summary>
+    public void TriggerRespawn()
+    {
+        RespawnTriggered?.Invoke();
+    }
+
+    /// <summary>
+    /// Notifica que a animação de respawn terminou.
+    /// </summary>
+    public void FinishRespawnAnimation()
+    {
+        Debug.Log("[CharacterState] FinishRespawnAnimation");
+        RespawnAnimationFinished?.Invoke();
+    }
+
+    /// <summary>
+    /// Finaliza completamente o processo de respawn.
+    /// </summary>
+    public void CompleteRespawn()
+    {
+        RespawnCompleted?.Invoke();
+    } 
 
 }

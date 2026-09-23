@@ -19,6 +19,8 @@ O padrão central é:
 Assets/Game/Scripts/
 ├── Abilities/
 │   ├── Ability.cs
+│   ├── Dash/
+│   │   └── DashAbility.cs
 │   ├── Jump/
 │   │   ├── DoubleJumpDecorator.cs
 │   │   ├── JumpAbility.cs
@@ -26,36 +28,39 @@ Assets/Game/Scripts/
 │   │   └── VariableJumpDecorator.cs
 │   ├── Movement/
 │   │   └── MoveAbility.cs
-│   ├── Dash/
-│   │   └── DashAbility.cs
 │   └── Wall/
 │       ├── WallJumpAbility.cs
 │       └── WallSlideAbility.cs
+├── Components/
+│   ├── CharacterAnimator.cs
+│   └── GhostTrail/
+│       ├── DashGhostTrail.cs
+│       ├── GhostInstance.cs
+│       ├── GhostPool.cs
+│       └── GhostSnapshot.cs
 ├── Core/
 │   ├── AbilityController.cs
 │   ├── CharacterContext.cs
 │   ├── CharacterMotor.cs
 │   ├── CharacterState.cs
 │   ├── GroundDetector.cs
-│   ├── MotorPriority.cs [Atualizar]
+│   ├── MotorPriority.cs
 │   ├── PlayerInputActions.cs
 │   ├── PlayerInputReader.cs
 │   └── WallDetector.cs
-├── Components/
-│   ├── GhostTrail/
-│   │   ├── DashGhostTrail.cs [Atualizar]
-│   │   ├── GhostInstance.cs [Atualizar]
-│   │   ├── GhostPool.cs [Atualizar]
-│   │   └── GhostSnapshot.cs [Atualizar]
-│   └── CharacterAnimator.cs [Atualizar]
 ├── Data/
 ├── Input/
 │   └── PlayerFrameInput.cs
 ├── Intefaces/
 │   └── IAbility.cs
+├── Respawn/
+│   ├── RespawnController.cs
+│   └── RespawnPoint.cs
 └── Specs/
     ├── architecture.md
-    └── classes-specs.md
+    ├── classes-specs.md
+    ├── foo.md
+    └── Virtual_Guy_Animation_Design_Document.md
 ```
 
 ## Regras de design

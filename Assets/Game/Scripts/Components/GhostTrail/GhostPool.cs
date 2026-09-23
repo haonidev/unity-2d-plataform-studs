@@ -55,9 +55,9 @@ public class GhostPool : MonoBehaviour
 
         available.Enqueue(ghost);
 
-        #if UNITY_EDITOR
-            Debug.Log($"GhostPool: nova instância criada. Total disponível: {available.Count}");
-        #endif
+        // #if UNITY_EDITOR
+        //     Debug.Log($"GhostPool: nova instância criada. Total disponível: {available.Count}");
+        // #endif
 
         return ghost;
     }

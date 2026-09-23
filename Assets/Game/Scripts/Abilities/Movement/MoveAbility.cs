@@ -26,14 +26,15 @@ public class MoveAbility : Ability
     /// </summary>
     private void ApplyMovement()
     {
+        //Debug.Log($"HasControl={Context.State.HasControl}  Input={Context.MoveInput.x}");
+
         if (!Context.State.HasControl)
             return;
 
 
         if (!Context.Motor.CanControlHorizontalMovement)
-        {
             return;
-        }
+
 
         float inputX = Context.MoveInput.x;
 
@@ -42,18 +43,12 @@ public class MoveAbility : Ability
         float accelRate;
 
         if (Mathf.Abs(targetSpeed) > 0.01f)
-        {
             accelRate = acceleration;
-        }
         else
-        {
             accelRate = deceleration;
-        }
 
         if (!Context.IsGrounded)
-        {
             accelRate *= airControlMultiplier;
-        }
 
         currentSpeed = Mathf.MoveTowards(
             currentSpeed,
@@ -64,13 +59,11 @@ public class MoveAbility : Ability
         Context.State.SetRunning(Mathf.Abs(currentSpeed) > 0.01f);
         Context.Motor.RequestHorizontalVelocity(currentSpeed, MotorPriority.Movement);
 
+        //Debug.Log($"RequestHorizontalVelocity = {currentSpeed}");
+
         if (inputX > 0f)
-        {
             Context.State.SetFacingDirection(1);
-        }
         else if (inputX < 0f)
-        {
             Context.State.SetFacingDirection(-1);
-        }
     }
 }

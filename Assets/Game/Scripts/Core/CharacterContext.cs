@@ -12,12 +12,38 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInputReader))]
 public class CharacterContext : MonoBehaviour
 {
-    public Rigidbody2D Rigidbody { get; private set; }
-    public CharacterMotor Motor { get; private set; }
+
+    private Rigidbody2D rigidbody;
+    public Rigidbody2D Rigidbody
+    {
+        get
+        {
+            rigidbody ??= GetComponent<Rigidbody2D>();
+            return rigidbody;
+        }
+    }
+    private CharacterMotor motor;
+    public CharacterMotor Motor 
+    { 
+        get
+        {
+            motor ??= GetComponent<CharacterMotor>();
+            return motor;
+        }
+    }
     private WallDetector wallDetector;
     private GroundDetector groundDetector;
     private PlayerInputReader input;
     private CharacterState state;
+
+    public CharacterState State
+    {
+        get
+        {
+            state ??= GetComponent<CharacterState>();
+            return state;
+        }
+    }
 
     /// <summary>
     /// Inicializa a referência interna do contexto.
@@ -41,8 +67,8 @@ public class CharacterContext : MonoBehaviour
     /// </summary>
     private void CacheComponents()
     {
-        Rigidbody = GetComponent<Rigidbody2D>();
-        Motor = GetComponent<CharacterMotor>();
+        rigidbody = GetComponent<Rigidbody2D>();
+        motor = GetComponent<CharacterMotor>();
 
         wallDetector = GetComponent<WallDetector>();
         groundDetector = GetComponent<GroundDetector>();
@@ -55,8 +81,8 @@ public class CharacterContext : MonoBehaviour
     /// </summary>
     private void ValidateComponents()
     {
-        Debug.Assert(Rigidbody != null);
-        Debug.Assert(Motor != null);
+        Debug.Assert(rigidbody != null);
+        Debug.Assert(motor != null);
         Debug.Assert(wallDetector != null);
         Debug.Assert(groundDetector != null);
         Debug.Assert(input != null);
@@ -124,7 +150,7 @@ public class CharacterContext : MonoBehaviour
     /// <summary>
     /// Velocidade vertical atual do personagem.
     /// </summary>
-    public float VerticalVelocity => Motor.GetVerticalVelocity();
+    public float VerticalVelocity => motor.GetVerticalVelocity();
 
     /// <summary>
     /// Indica se o personagem está subindo.
@@ -136,8 +162,4 @@ public class CharacterContext : MonoBehaviour
     /// </summary>
     public bool IsFalling => VerticalVelocity < 0f;
 
-    /// <summary>
-    /// Acesso ao estado de gameplay do personagem.
-    /// </summary>
-    public CharacterState State => state;
 }
