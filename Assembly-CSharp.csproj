@@ -62,6 +62,7 @@
     <Compile Include="Assets/Game/Scripts/Core/MotorPriority.cs" />
     <Compile Include="Assets/Game/Scripts/Core/CharacterContext.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Dash/DashAbility.cs" />
+    <Compile Include="Assets/Game/Scripts/Traps/SawTrapController.cs" />
     <Compile Include="Assets/Game/Scripts/Core/CharacterMotor.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Ability.cs" />
     <Compile Include="Assets/Game/Scripts/Traps/LethalTrapEffect.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Assets/Game/Scripts/Core/PlayerInputActions.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Jump/VariableJumpDecorator.cs" />
     <Compile Include="Assets/Game/Scripts/Components/GhostTrail/DashGhostTrail.cs.cs" />
+    <Compile Include="Assets/Game/Scripts/Traps/SawActivationTrigger.cs" />
     <Compile Include="Assets/Game/Scripts/Debug/GameplayDebugInput.cs" />
     <Compile Include="Assets/Game/Scripts/Components/CharacterAnimator.cs" />
     <Compile Include="Assets/Game/Scripts/Components/GhostTrail/GhostInstance.cs" />
@@ -85,7 +87,9 @@
     <Compile Include="Assets/Game/Scripts/Abilities/Death/DeathAbility.cs" />
     <Compile Include="Assets/Game/Scripts/PlayerInputActions.cs" />
     <Compile Include="Assets/Game/Scripts/Core/CharacterState.cs" />
+    <Compile Include="Assets/Game/Scripts/Traps/SawTrapMovement.cs" />
     <Compile Include="Assets/Game/Scripts/Core/GroundDetector.cs" />
+    <Compile Include="Assets/Game/Scripts/Traps/SawTrapVisual.cs" />
     <Compile Include="Assets/Game/Scripts/Abilities/Jump/JumpAbility.cs" />
   </ItemGroup>
   <ItemGroup>

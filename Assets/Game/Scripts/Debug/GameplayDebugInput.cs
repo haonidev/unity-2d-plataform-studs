@@ -17,7 +17,7 @@ namespace Game.Debugging
 
         private void Awake()
         {
-            inputActions = new PlayerInputActions();
+            EnsureInputActions();
 
             if (deathAbility == null)
                 deathAbility = GetComponent<DeathAbility>();
@@ -29,16 +29,31 @@ namespace Game.Debugging
 
         private void OnEnable()
         {
-            inputActions.Enable();
+            EnsureInputActions();
 
             inputActions.Debug.Kill.performed += OnKill;
+            inputActions.Enable();
         }
 
         private void OnDisable()
         {
+            if (inputActions == null)
+                return;
+
             inputActions.Debug.Kill.performed -= OnKill;
 
             inputActions.Disable();
+        }
+
+        private void OnDestroy()
+        {
+            inputActions?.Dispose();
+            inputActions = null;
+        }
+
+        private void EnsureInputActions()
+        {
+            inputActions ??= new PlayerInputActions();
         }
 
         private void OnKill(InputAction.CallbackContext _)

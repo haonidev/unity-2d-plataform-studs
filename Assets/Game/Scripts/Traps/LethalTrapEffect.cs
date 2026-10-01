@@ -6,11 +6,17 @@ using UnityEngine;
 [RequireComponent(typeof(TrapContactDetector))]
 public sealed class LethalTrapEffect : MonoBehaviour
 {
+    [Tooltip("Opcional: quando definido, o efeito só ocorre com esta Saw ativa.")]
+    [SerializeField] private SawTrapController sawTrapController;
+
     private TrapContactDetector contactDetector;
 
     private void Awake()
     {
         contactDetector = GetComponent<TrapContactDetector>();
+
+        if (sawTrapController == null)
+            sawTrapController = GetComponent<SawTrapController>();
     }
 
     private void OnEnable()
@@ -29,6 +35,9 @@ public sealed class LethalTrapEffect : MonoBehaviour
 
     private void OnActivated(TrapTarget target)
     {
+        if (target == null || (sawTrapController != null && !sawTrapController.IsActive))
+            return;
+
         target.ReceiveLethalTrap();
     }
 }

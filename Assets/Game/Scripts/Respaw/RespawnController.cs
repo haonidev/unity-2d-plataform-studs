@@ -34,7 +34,7 @@ public class RespawnController : MonoBehaviour
 
         var state = GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
 
-        if (state.IsName("Player_respawn") && state.normalizedTime >= 1f)
+        if (state.IsName("Player_respawn") && state.normalizedTime >= 0.85f)
         {
             Debug.Log("RESPAWN FINALIZADO VIA POLLING");
 

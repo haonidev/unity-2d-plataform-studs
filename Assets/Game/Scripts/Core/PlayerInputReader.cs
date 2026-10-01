@@ -20,7 +20,7 @@ public class PlayerInputReader : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        inputActions = new PlayerInputActions();
+        EnsureInputActions();
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public class PlayerInputReader : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        inputActions.Enable();
+        EnsureInputActions();
 
         inputActions.Player.Move.performed += OnMove;
         inputActions.Player.Move.canceled += OnMove;
@@ -36,6 +36,7 @@ public class PlayerInputReader : MonoBehaviour
         inputActions.Player.Jump.performed += OnJump;
         inputActions.Player.Jump.canceled += OnJumpCanceled;
         inputActions.Player.Dash.performed += OnDash;
+        inputActions.Enable();
     }
 
     /// <summary>
@@ -43,6 +44,9 @@ public class PlayerInputReader : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        if (inputActions == null)
+            return;
+
         inputActions.Player.Move.performed -= OnMove;
         inputActions.Player.Move.canceled -= OnMove;
 
@@ -51,6 +55,17 @@ public class PlayerInputReader : MonoBehaviour
         inputActions.Player.Dash.performed -= OnDash;
 
         inputActions.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        inputActions?.Dispose();
+        inputActions = null;
+    }
+
+    private void EnsureInputActions()
+    {
+        inputActions ??= new PlayerInputActions();
     }
 
     /// <summary>
