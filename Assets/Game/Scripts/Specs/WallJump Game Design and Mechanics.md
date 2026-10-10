@@ -140,6 +140,25 @@ Sombra / Ghost Trail:
 
 Deixar uma rastro rápido de sprite semi-transparente caso o jogador faça um salto perfeito ou esteja em estado de alta velocidade.
 
+## Decisões de escopo e integração do projeto
+
+Esta seção registra as decisões atuais do projeto e prevalece sobre os trechos anteriores que descrevem Grab, Climb Jump, stamina e corner correction.
+
+- A interação com paredes será baseada no `WallSlideAbility`. O jogo não terá uma ação de Grab.
+- Climb Jump e seu vetor vertical dedicado não fazem parte do escopo atual. Os tipos de Wall Jump a considerar são o salto normal e o salto neutro; os critérios que dependem de Grab, Climb Jump ou stamina ficam adiados até a definição do sistema de stamina.
+- A elegibilidade do salto é determinada pelo estado do personagem: durante `IsWallSliding`, o comando deve ser tratado como Wall Jump; fora desse estado, pode ser tratado como pulo normal.
+- A implementação deve impedir que `JumpAbility` e `WallJumpAbility` consumam o mesmo `JumpPressed` no mesmo frame. Um Wall Jump executado também deve invalidar/consumir esse comando para impedir um segundo salto normal, inclusive quando o coyote time de chão ainda estiver ativo. A seleção não deve depender acidentalmente da ordem dos componentes no `AbilityController`.
+- O Wall Jump terá seu próprio buffer de entrada e wall coyote time. Ao perder contato, deve conservar por toda a janela de coyote a direção da última parede válida; `WallDetector.WallDirection` zerado após a separação não pode ser usado como direção do impulso.
+- Corner correction está fora do escopo desta implementação e poderá ser reavaliada em outra tarefa.
+- Stamina e feedback específicos de stamina serão definidos em uma tarefa futura e acompanhados como débitos técnicos no documento `Stamina System Game Design.md`.
+
+## Critérios de aceite revisados para o escopo atual
+
+- [ ] Pulo normal e Wall Jump nunca são executados pelo mesmo comando de pulo.
+- [ ] O Wall Jump pode ser executado durante o buffer e a janela de wall coyote configurados, usando a direção armazenada da última parede.
+- [ ] Salto normal e salto neutro apresentam vetores distintos conforme a direção horizontal no momento do comando.
+- [ ] Grab, Climb Jump, stamina e corner correction não são requisitos para concluir esta tarefa.
+
 7. Critérios de Aceite (Checklist para QA & Code Review)
 O desenvolvedor deve garantir que a mecânica atenda a 100% dos critérios abaixo antes de considerar a tarefa concluída:
 

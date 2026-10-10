@@ -21,6 +21,11 @@ public class CharacterState : MonoBehaviour
 
     public bool IsWallSliding { get; private set; }
 
+    /// <summary>
+    /// Indica que o Wall Jump está elegível, incluindo sua janela de coyote.
+    /// </summary>
+    public bool IsWallJumpAvailable { get; private set; }
+
     public bool IsDashing { get; private set; }
 
     /// <summary>
@@ -126,6 +131,7 @@ public class CharacterState : MonoBehaviour
         SetRising(false);
 
         SetWallSliding(false);
+        SetWallJumpAvailable(false);
 
         SetDashing(false);
     }
@@ -139,6 +145,9 @@ public class CharacterState : MonoBehaviour
             return;
 
         IsGrounded = value;
+
+        if (value)
+            SetWallJumpAvailable(false);
 
         GroundedChanged?.Invoke(value);
     }
@@ -193,6 +202,14 @@ public class CharacterState : MonoBehaviour
         IsWallSliding = value;
 
         WallSlidingChanged?.Invoke(value);
+    }
+
+    /// <summary>
+    /// Publica a elegibilidade atual do Wall Jump para arbitrar o comando com o pulo normal.
+    /// </summary>
+    public void SetWallJumpAvailable(bool value)
+    {
+        IsWallJumpAvailable = value;
     }
 
     /// <summary>

@@ -120,6 +120,11 @@ public class CharacterContext : MonoBehaviour
     public bool DashPressed => FrameInput.DashPressed;
 
     /// <summary>
+    /// Reserva a ação de pulo atual para impedir que outra habilidade a execute novamente.
+    /// </summary>
+    public bool TryConsumeJumpAction() => FrameInput.TryConsumeJumpAction();
+
+    /// <summary>
     /// Limpa os eventos de entrada de um único frame.
     /// Deve ser chamado apenas pelo AbilityController.
     /// </summary>

@@ -1,76 +1,135 @@
 using UnityEngine;
 
 /// <summary>
-/// Executa o wall jump quando o personagem está em wall slide e pressiona o botão de salto.
+/// Executa saltos normais ou neutros a partir do Wall Slide, com buffer e wall coyote time.
 /// </summary>
 public class WallJumpAbility : Ability
 {
     [Header("Wall Jump")]
+    [SerializeField] private float jumpForce = 12f;
+    [SerializeField] private float horizontalForce = 8f;
+    [SerializeField] private float neutralJumpForce = 14f;
+    [SerializeField] private float neutralHorizontalForce = 2f;
 
-    [SerializeField]
-    private float jumpForce = 12f;
+    [Header("Tolerâncias")]
+    [SerializeField, Min(0f)] private float wallCoyoteTime = 0.1f;
+    [SerializeField, Min(0f)] private float jumpBufferTime = 0.1f;
 
-    [SerializeField]
-    private float horizontalForce = 8f;
+    [Header("Controle")]
+    [SerializeField, Min(0f)] private float controlLockDuration = 0.05f;
+    [SerializeField, Range(0f, 1f)] private float horizontalInputThreshold = 0.1f;
 
-    [SerializeField]
-    private float controlLockDuration = 0.15f;
-
-    [SerializeField]
-    private float wallDetachDistance = 0.08f;
+    private float wallCoyoteCounter;
+    private float jumpBufferCounter;
+    private int lastWallDirection;
 
     /// <summary>
-    /// Verifica se o wall jump pode ser executado neste frame.
+    /// Mantém as janelas de tolerância e tenta consumir o comando de pulo no Update.
     /// </summary>
     public override void Tick()
     {
+        UpdateLastWallAndCoyote();
+        UpdateJumpBuffer();
+
         bool canWallJump = CanWallJump();
-        bool jumpPressed = Context.JumpPressed;
+        Context.State.SetWallJumpAvailable(canWallJump);
 
-        if (!canWallJump)
+        if (Context.FrameInput.JumpActionConsumed)
+        {
+            jumpBufferCounter = 0f;
             return;
+        }
 
-        if (!jumpPressed)
+        if (!canWallJump || jumpBufferCounter <= 0f || !Context.State.HasControl)
             return;
 
         ExecuteWallJump();
     }
 
     /// <summary>
-    /// Verifica se o personagem está em estado de wall slide.
+    /// Guarda a direção da parede enquanto o personagem está em Wall Slide e mantém o coyote.
     /// </summary>
-    private bool CanWallJump()
+    private void UpdateLastWallAndCoyote()
     {
-        return Context.State.IsWallSliding;
+        if (Context.IsGrounded)
+        {
+            lastWallDirection = 0;
+            wallCoyoteCounter = 0f;
+            return;
+        }
+
+        if (Context.IsTouchingWall && Context.WallDirection != 0)
+            lastWallDirection = Context.WallDirection;
+
+        if (Context.State.IsWallSliding && Context.IsTouchingWall && Context.WallDirection != 0)
+        {
+            wallCoyoteCounter = wallCoyoteTime;
+            return;
+        }
+
+        wallCoyoteCounter = Mathf.Max(0f, wallCoyoteCounter - Time.deltaTime);
     }
 
     /// <summary>
-    /// Aplica o impulso do wall jump e encerra o estado de wall slide.
+    /// Registra o pulo antes da condição de parede tornar-se válida.
+    /// </summary>
+    private void UpdateJumpBuffer()
+    {
+        if (Context.FrameInput.JumpActionConsumed)
+        {
+            jumpBufferCounter = 0f;
+            return;
+        }
+
+        if (Context.JumpPressed)
+            jumpBufferCounter = jumpBufferTime;
+        else
+            jumpBufferCounter = Mathf.Max(0f, jumpBufferCounter - Time.deltaTime);
+    }
+
+    private bool CanWallJump()
+    {
+        return !Context.IsGrounded
+            && lastWallDirection != 0
+            && ((Context.State.IsWallSliding && Context.IsTouchingWall)
+                || wallCoyoteCounter > 0f);
+    }
+
+    /// <summary>
+    /// Escolhe salto normal ao receber direção para longe da parede; nos demais casos, neutro.
     /// </summary>
     private void ExecuteWallJump()
     {
-        if (!Context.State.HasControl)
+        if (!Context.TryConsumeJumpAction())
             return;
 
-        int jumpDirection = -Context.WallDirection;
+        int jumpDirection = -lastWallDirection;
+        float horizontalInput = Context.MoveInput.x;
+        bool jumpingAway = Mathf.Abs(horizontalInput) >= horizontalInputThreshold
+            && Mathf.Sign(horizontalInput) == jumpDirection;
 
-        Vector3 position = transform.position;
+        if (jumpingAway)
+        {
+            Context.Motor.RequestHorizontalVelocity(
+                jumpDirection * horizontalForce,
+                MotorPriority.WallJump);
+            Context.Motor.SetVerticalVelocity(jumpForce);
+            Context.Motor.LockHorizontalControl(controlLockDuration);
+        }
+        else
+        {
+            Context.Motor.RequestHorizontalVelocity(
+                jumpDirection * neutralHorizontalForce,
+                MotorPriority.WallJump);
+            Context.Motor.SetVerticalVelocity(neutralJumpForce);
+        }
 
-        position.x += jumpDirection * wallDetachDistance;
-
-        transform.position = position;
-
-        Context.Motor.LockHorizontalControl(controlLockDuration);
-
-        Context.Motor.RequestHorizontalVelocity(horizontalForce * jumpDirection, MotorPriority.WallJump);
-
-        Context.Motor.SetVerticalVelocity(jumpForce);
-
+        wallCoyoteCounter = 0f;
+        jumpBufferCounter = 0f;
+        Context.State.SetWallJumpAvailable(false);
         Context.State.SetWallSliding(false);
-
         Context.State.SetRising(true);
         Context.State.SetFalling(false);
-
         Context.State.TriggerJump();
     }
 }

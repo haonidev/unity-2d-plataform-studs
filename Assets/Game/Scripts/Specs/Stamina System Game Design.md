@@ -178,6 +178,12 @@ Som de suspiro do personagem ao entrar em exaustão.
 
 Efeito de recarga sonora imediato ao tocar o chão.
 
+## Débitos técnicos e decisões pendentes
+
+- **Compatibilizar duração e taxas de consumo:** uma especificação anterior menciona capacidade para escalar continuamente por aproximadamente 1,1 s, mas os valores atuais (`MaxStamina = 110`, `ClimbUpDrainRate = 45/s`) resultam em aproximadamente 2,44 s subindo; parado, `ClimbStillDrainRate = 10/s` resulta em 11 s. Revisar e aprovar capacidade e taxas durante a implementação do sistema de stamina. Até lá, esses números são referências, não valores finais de balanceamento.
+- **Redefinir a interação com a parede:** o projeto não terá Grab. O recurso de parede existente mais próximo é `WallSlideAbility`. Antes de implementar stamina, definir quais estados/ações de Wall Slide consomem recurso, como ocorre a recuperação e o que significa exaustão sem Grab ou Climb Jump. As seções de Grab e Climb Jump acima são propostas antigas e não descrevem o escopo atual aprovado.
+- **Definir feedback de stamina:** especificar os eventos e responsáveis por feedback visual e sonoro de stamina baixa, exaustão e recuperação, integrando-os à arquitetura existente de `CharacterState` e componentes de feedback. Não adicionar feedback específico de stamina ao escopo do Wall Jump antes dessa definição.
+
 7. Critérios de Aceite (Checklist para QA & Code Review)
 [ ] Restauração no Chão: A stamina é completamente restaurada ao tocar qualquer superfície sólida/chão.
 

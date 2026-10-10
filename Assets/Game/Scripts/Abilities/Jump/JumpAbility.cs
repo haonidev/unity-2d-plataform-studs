@@ -86,6 +86,12 @@ public class JumpAbility : Ability
     /// </summary>
     private void UpdateJumpBuffer()
     {
+        if (Context.FrameInput.JumpActionConsumed || IsWallJumpSelected())
+        {
+            bufferCounter = 0f;
+            return;
+        }
+
         if (Context.JumpPressed)
             bufferCounter = jumpBufferTime;
         else
@@ -97,6 +103,9 @@ public class JumpAbility : Ability
     /// </summary>
     private void TryConsumeJump()
     {
+        if (Context.FrameInput.JumpActionConsumed || IsWallJumpSelected())
+            return;
+
         if (!Context.State.HasControl)
             return;
 
@@ -117,6 +126,9 @@ public class JumpAbility : Ability
     /// </summary>
     private void ExecuteJump()
     {
+        if (!Context.TryConsumeJumpAction())
+            return;
+
         Context.Motor.SetVerticalVelocity(jumpForce);
 
         Context.State.TriggerJump();
@@ -128,5 +140,14 @@ public class JumpAbility : Ability
 
         bufferCounter = 0;
         coyoteCounter = 0;
+    }
+
+    /// <summary>
+    /// Dá prioridade ao Wall Jump durante o wall slide e sua janela de coyote.
+    /// </summary>
+    private bool IsWallJumpSelected()
+    {
+        return Context.State.IsWallSliding
+            || Context.State.IsWallJumpAvailable;
     }
 }
